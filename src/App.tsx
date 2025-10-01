@@ -1,11 +1,20 @@
-import { useState } from "react";
 import "./App.css";
+import Footer from "./components/Footer.tsx";
+import Navbar from "./components/Navbar.tsx";
+import RegisterPage from "./pages/RegisterPage.tsx";
 
 function App() {
-  const [count, setCount] = useState(0);
 
   return <>
-<p>bsbdsabdas</p>
+  <div className="container">
+ <Navbar />
+ <RegisterPage />
+
+
+
+
+ <Footer />
+ </div>
   </>;
 }
 
