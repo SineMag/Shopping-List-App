@@ -38,6 +38,16 @@ main {
   overflow-y: auto;
 }
 
+/* Center the login view */
+.loginPage {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
 .registerPage {
   display: flex;
   flex-direction: row;
@@ -232,7 +242,8 @@ main {
   border-radius: 15px;
   padding: 1.8rem;
   overflow: hidden;
-  border: 1px solid red;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  opacity: 0.99;
 }
 
 .loginCard::before {
@@ -240,6 +251,14 @@ main {
   position: absolute;
   inset: 0;
   pointer-events: none;
+}
+.homeNavBar{
+  border: 1px solid red;
+  width: 15%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
 /* Responsive */
