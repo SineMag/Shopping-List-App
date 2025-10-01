@@ -47,6 +47,19 @@ main {
   width: 100%;
 }
 
+.registrationImage img {
+  width: 100%;
+  max-width: 750px;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-content: end;
+  display: block;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
 .registrationForm {
   flex: 1;
   display: flex;
@@ -54,10 +67,119 @@ main {
   justify-content: start;
   align-items: start;
   padding: 2rem;
+  gap: 1rem;
 }
 
 .registerButton:hover {
   background-color: #7EA974;
+}
+
+/* Registration Card */
+.registerCard {
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  color: #222;
+  border-radius: 16px;
+  padding: 1.75rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.registerCard h2 {
+  margin-bottom: 1rem;
+  color: #1f2937; /* slate-800 */
+}
+
+/* Form groups */
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.formGroup label {
+  font-weight: 600;
+  color: #374151; /* slate-700 */
+}
+
+.formGroup input {
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  border: 2px solid rgba(0,0,0,0.1);
+  outline: none;
+  background: #f8fafc; /* slate-50 */
+  color: #111827; /* slate-900 */
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.formGroup input:focus {
+  border-color: #7ea974;
+  box-shadow: 0 0 0 3px rgba(126, 169, 116, 0.25);
+}
+
+.formGroup input[aria-invalid="true"] {
+  border-color: #d32f2f;
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.15);
+}
+
+.error {
+  color: #d32f2f;
+  font-size: 0.85rem;
+}
+
+.successMsg {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #81c784;
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  margin-bottom: 0.75rem;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.successMsg.fadeOut {
+  opacity: 0;
+}
+
+/* Button */
+.registerButton {
+  background-color: #FDD048;
+  color: #111;
+  width: 100%;
+  height: 44px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.registerButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.22);
+}
+
+.registerButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .registerPage {
+    flex-direction: column;
+    padding-bottom: 1rem;
+  }
+
+  .registrationImage {
+    order: -1;
+    display: flex;
+    justify-content: center;
+  }
 }
 
 
