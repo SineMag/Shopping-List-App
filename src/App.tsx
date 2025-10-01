@@ -8,8 +8,11 @@ function App() {
   return <>
   <div className="container">
  <Navbar />
- <RegisterPage />
 
+ {/* // main section for the app */}
+ <main >
+ <RegisterPage />
+</main>
 
 
 
