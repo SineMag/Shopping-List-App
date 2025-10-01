@@ -337,14 +337,86 @@ main {
   }
 }
 
-.footer {
-  color: white;
-  padding: 1rem;
-  width: 100%;
-  height: 10%;
-  font-weight: bolder;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-content: end;
-}
+  .footer {
+    color: white;
+    padding: 1rem;
+    width: 100%;
+    height: 10%;
+    font-weight: bolder;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: end;
+  }
+
+  /* Footer extras */
+  .footerSeparator {
+    margin: 0 0.75rem;
+    opacity: 0.8;
+  }
+  .footerLink {
+    color: inherit;
+    text-decoration: underline;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* Privacy Policy page */
+  .privacyPolicyPage {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+  }
+
+  .privacyCard {
+    width: 100%;
+    max-width: 900px;
+    background: #ffffff;
+    color: #222;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  }
+
+  .privacyCard h1 {
+    margin-bottom: 0.75rem;
+    color: #1f2937;
+  }
+  .privacyCard h2 {
+    margin-top: 1rem;
+    color: #111827;
+  }
+  .privacyCard p,
+  .privacyCard ul {
+    margin-bottom: 0.75rem;
+  }
+  .privacyCard ul {
+    list-style: disc;
+    padding-left: 1.25rem;
+  }
+  .privacyActions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .downloadButton,
+  .backHomeLink {
+    display: inline-block;
+    background-color: #fdd048;
+    color: #111;
+    border: none;
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    transition: transform 0.1s ease, box-shadow 0.2s ease;
+  }
+  .downloadButton:hover,
+  .backHomeLink:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22);
+  }

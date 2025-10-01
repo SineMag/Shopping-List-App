@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import HomePage from "./pages/HomePage.tsx"
+import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
               <Route path="/home" element={<HomePage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
             </Routes>
           </main>
           <Footer />
