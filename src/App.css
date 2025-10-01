@@ -13,6 +13,55 @@ body,
   color: white;
 }
 
+.homeLayout {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  gap: 1rem;
+}
+
+.homeNavList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.homeNavButton {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background-color: #fdd048;
+  color: #111;
+  border: none;
+  border-radius: 12px;
+  padding: 0.7rem 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none; /* for Links */
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s ease, transform 0.1s ease,
+    box-shadow 0.2s ease;
+}
+
+.homeNavButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22);
+}
+
+.homeContent {
+  background: #7ea974;
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+  overflow: auto;
+}
+
+
+
 .navbar {
   color: white;
   padding: 1rem;
@@ -36,6 +85,16 @@ main {
   height: 80vh;
   padding: 1rem;
   overflow-y: auto;
+}
+
+/* Center the login view */
+.loginPage {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
 }
 
 .registerPage {
@@ -232,7 +291,8 @@ main {
   border-radius: 15px;
   padding: 1.8rem;
   overflow: hidden;
-  border: 1px solid red;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  opacity: 0.99;
 }
 
 .loginCard::before {
@@ -240,6 +300,18 @@ main {
   position: absolute;
   inset: 0;
   pointer-events: none;
+}
+.homeNavBar {
+  width: 15%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.homeContent {
+  width: 85%;
+  height: 100%;
 }
 
 /* Responsive */
@@ -254,14 +326,97 @@ main {
   }
 }
 
-.footer {
-  color: white;
-  padding: 1rem;
-  width: 100%;
-  height: 10%;
-  font-weight: bolder;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-content: end;
+@media (max-width: 900px) {
+  .homeLayout {
+    flex-direction: column;
+  }
+  .homeNavBar,
+  .homeContent {
+    width: 100%;
+    height: auto;
+  }
 }
+
+  .footer {
+    color: white;
+    padding: 1rem;
+    width: 100%;
+    height: 10%;
+    font-weight: bolder;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: end;
+  }
+
+  /* Footer extras */
+  .footerSeparator {
+    margin: 0 0.75rem;
+    opacity: 0.8;
+  }
+  .footerLink {
+    color: inherit;
+    text-decoration: underline;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* Privacy Policy page */
+  .privacyPolicyPage {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+  }
+
+  .privacyCard {
+    width: 100%;
+    max-width: 900px;
+    background: #ffffff;
+    color: #222;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  }
+
+  .privacyCard h1 {
+    margin-bottom: 0.75rem;
+    color: #1f2937;
+  }
+  .privacyCard h2 {
+    margin-top: 1rem;
+    color: #111827;
+  }
+  .privacyCard p,
+  .privacyCard ul {
+    margin-bottom: 0.75rem;
+  }
+  .privacyCard ul {
+    list-style: disc;
+    padding-left: 1.25rem;
+  }
+  .privacyActions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .downloadButton,
+  .backHomeLink {
+    display: inline-block;
+    background-color: #fdd048;
+    color: #111;
+    border: none;
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    transition: transform 0.1s ease, box-shadow 0.2s ease;
+  }
+  .downloadButton:hover,
+  .backHomeLink:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22);
+  }

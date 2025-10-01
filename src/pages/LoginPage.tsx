@@ -70,55 +70,58 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="loginCard">
-      {successMsg && (
-        <p className={`successMsg ${isFading ? "fadeOut" : ""}`} role="status">{successMsg}</p>
-      )}
-      {errors.submit && (
-        <p className="error" role="alert">{errors.submit}</p>
-      )}
-      <form onSubmit={handleSubmit} noValidate>
-        <div className="formGroup">
-          <label htmlFor="email">Email *</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-            autoComplete="email"
-            aria-invalid={errors.email ? "true" : undefined}
-            aria-describedby={errors.email ? "login-email-error" : undefined}
-          />
-          {errors.email && (
-            <span id="login-email-error" className="error">{errors.email}</span>
-          )}
-        </div>
+    <div className="loginPage">
+      <div className="loginCard">
+        {successMsg && (
+          <p className={`successMsg ${isFading ? "fadeOut" : ""}`} role="status">{successMsg}</p>
+        )}
+        {errors.submit && (
+          <p className="error" role="alert">{errors.submit}</p>
+        )}
+        <form onSubmit={handleSubmit} noValidate>
+          <div className="formGroup">
+            <label htmlFor="email">Email *</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              required
+              autoComplete="email"
+              aria-invalid={errors.email ? "true" : undefined}
+              aria-describedby={errors.email ? "login-email-error" : undefined}
+            />
+            {errors.email && (
+              <span id="login-email-error" className="error">{errors.email}</span>
+            )}
+          </div>
 
-        <div className="formGroup">
-          <label htmlFor="password">Password *</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            value={form.password}
-            onChange={handleChange}
-            required
-            autoComplete="current-password"
-            aria-invalid={errors.password ? "true" : undefined}
-            aria-describedby={errors.password ? "login-password-error" : undefined}
-          />
-          {errors.password && (
-            <span id="login-password-error" className="error">{errors.password}</span>
-          )}
-        </div>
+          <div className="formGroup">
+            <label htmlFor="password">Password *</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              value={form.password}
+              onChange={handleChange}
+              required
+              autoComplete="current-password"
+              aria-invalid={errors.password ? "true" : undefined}
+              aria-describedby={errors.password ? "login-password-error" : undefined}
+            />
+            {errors.password && (
+              <span id="login-password-error" className="error">{errors.password}</span>
+            )}
+          </div>
 
-        <button className="loginButton" type="submit" disabled={submitting}>
-          {submitting ? "Signing In..." : "Sign In"}
-        </button>
-        <Link to="/register" className="goToRegister">Don't have an account? Register</Link>
-      </form>
+          <button className="loginButton" type="submit" disabled={submitting}>
+            {submitting ? "Signing In..." : "Sign In"}
+          </button>
+          <Link to="/register" className="goToRegister">Don't have an account? Register</Link>
+        </form>
+      </div>
     </div>
   );
 }
+
