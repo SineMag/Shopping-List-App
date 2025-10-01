@@ -1,1 +1,16 @@
-{}
+{
+  "users": [
+    {
+      "id": "d492",
+      "fullName": "S",
+      "email": "s@mail.com",
+      "password": "111111"
+    },
+    {
+      "id": "d337",
+      "fullName": "S",
+      "email": "s@mail.co.za",
+      "password": "121212121212"
+    }
+  ]
+}

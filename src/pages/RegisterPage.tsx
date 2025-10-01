@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import RegistrationImage from "../assets/image 17.png";
+import { Link } from "react-router-dom";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -53,14 +54,43 @@ export default function RegisterPage() {
     e.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
-    // Simulate async registration
-    setTimeout(() => {
-      setSubmitting(false);
-      setSuccessMsg("Account created successfully!");
-      // Here you could dispatch a Redux action or call an API
-      // Reset form
-      setForm({ fullName: "", email: "", password: "", confirmPassword: "" });
-    }, 800);
+    const { confirmPassword, ...payload } = form;
+    // First, check if email already exists
+    fetch(`http://localhost:3001/users?email=${encodeURIComponent(form.email)}`)
+      .then(async (res) => {
+        if (!res.ok) throw new Error("Lookup failed");
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          throw new Error("EMAIL_EXISTS");
+        }
+      })
+      .then(() =>
+        fetch("http://localhost:3001/users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        })
+      )
+      .then(async (res) => {
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || `Request failed with ${res.status}`);
+        }
+        return res.json();
+      })
+      .then(() => {
+        setErrors((prev) => ({ ...prev, submit: "" }));
+        setSuccessMsg("Account created successfully!");
+        setForm({ fullName: "", email: "", password: "", confirmPassword: "" });
+      })
+      .catch((err: Error) => {
+        if (err.message === "EMAIL_EXISTS") {
+          setErrors((prev) => ({ ...prev, email: "Email is already registered" }));
+        } else {
+          setErrors((prev) => ({ ...prev, submit: "Failed to save. Is json-server running on port 3001?" }));
+        }
+      })
+      .finally(() => setSubmitting(false));
   };
 
   return (
@@ -74,6 +104,9 @@ export default function RegisterPage() {
           <h2>Create your account</h2>
           {successMsg && (
             <p className={`successMsg ${isFading ? "fadeOut" : ""}`} role="status">{successMsg}</p>
+          )}
+          {errors.submit && (
+            <p className="error" role="alert">{errors.submit}</p>
           )}
           <form onSubmit={handleSubmit} noValidate>
             <div className="formGroup">
@@ -150,9 +183,12 @@ export default function RegisterPage() {
               )}
             </div>
 
+
             <button className="registerButton" type="submit" disabled={submitting}>
               {submitting ? "Signing Up..." : "Sign Up"}
             </button>
+            <Link to={"/login"} className="goToLogin">Already have an account? Log in</Link>
+
           </form>
         </div>
       </div>
