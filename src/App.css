@@ -313,6 +313,13 @@ main {
   width: 85%;
   height: 100%;
 }
+.homeContent {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+  text-align: center;
+}
 
 /* Responsive */
 @media (max-width: 900px) {
