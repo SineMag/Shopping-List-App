@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { IoHome } from "react-icons/io5";
+import { IoArrowBackCircleSharp } from "react-icons/io5";
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -33,7 +35,8 @@ export default function LoginPage() {
   const validate = () => {
     const newErrors: { [k: string]: string } = {};
     if (!form.email.trim()) newErrors.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) newErrors.email = "Enter a valid email";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+      newErrors.email = "Enter a valid email";
     if (!form.password) newErrors.password = "Password is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -44,7 +47,11 @@ export default function LoginPage() {
     if (!validate()) return;
     setSubmitting(true);
     // Authenticate against json-server (users collection)
-    fetch(`http://localhost:3001/users?email=${encodeURIComponent(form.email)}&password=${encodeURIComponent(form.password)}`)
+    fetch(
+      `http://localhost:3001/users?email=${encodeURIComponent(
+        form.email
+      )}&password=${encodeURIComponent(form.password)}`
+    )
       .then(async (res) => {
         if (!res.ok) throw new Error("Lookup failed");
         const users = await res.json();
@@ -61,22 +68,44 @@ export default function LoginPage() {
       })
       .catch((err: Error) => {
         if (err.message === "INVALID_CREDENTIALS") {
-          setErrors((prev) => ({ ...prev, submit: "Invalid email or password" }));
+          setErrors((prev) => ({
+            ...prev,
+            submit: "Invalid email or password",
+          }));
         } else {
-          setErrors((prev) => ({ ...prev, submit: "Login failed. Is json-server running on port 3001?" }));
+          setErrors((prev) => ({
+            ...prev,
+            submit: "Login failed. Is json-server running on port 3001?",
+          }));
         }
       })
       .finally(() => setSubmitting(false));
   };
 
   return (
-    <div className="loginPage">
+    <div
+      className="loginPage"
+      style={{ display: "flex", flexDirection: "column" }}
+    >
+      <div className="loginArrow">
+        <Link to="/home">
+          <IoArrowBackCircleSharp size={40} />
+        </Link>
+      </div>
+
       <div className="loginCard">
         {successMsg && (
-          <p className={`successMsg ${isFading ? "fadeOut" : ""}`} role="status">{successMsg}</p>
+          <p
+            className={`successMsg ${isFading ? "fadeOut" : ""}`}
+            role="status"
+          >
+            {successMsg}
+          </p>
         )}
         {errors.submit && (
-          <p className="error" role="alert">{errors.submit}</p>
+          <p className="error" role="alert">
+            {errors.submit}
+          </p>
         )}
         <form onSubmit={handleSubmit} noValidate>
           <div className="formGroup">
@@ -93,7 +122,9 @@ export default function LoginPage() {
               aria-describedby={errors.email ? "login-email-error" : undefined}
             />
             {errors.email && (
-              <span id="login-email-error" className="error">{errors.email}</span>
+              <span id="login-email-error" className="error">
+                {errors.email}
+              </span>
             )}
           </div>
 
@@ -108,20 +139,25 @@ export default function LoginPage() {
               required
               autoComplete="current-password"
               aria-invalid={errors.password ? "true" : undefined}
-              aria-describedby={errors.password ? "login-password-error" : undefined}
+              aria-describedby={
+                errors.password ? "login-password-error" : undefined
+              }
             />
             {errors.password && (
-              <span id="login-password-error" className="error">{errors.password}</span>
+              <span id="login-password-error" className="error">
+                {errors.password}
+              </span>
             )}
           </div>
 
           <button className="loginButton" type="submit" disabled={submitting}>
             {submitting ? "Signing In..." : "Sign In"}
           </button>
-          <Link to="/register" className="goToRegister">Don't have an account? Register</Link>
+          <Link to="/register" className="goToRegister">
+            Don't have an account? Register
+          </Link>
         </form>
       </div>
     </div>
   );
 }
-

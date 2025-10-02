@@ -11,6 +11,13 @@
       "fullName": "S",
       "email": "s@mail.co.za",
       "password": "121212121212"
+    },
+    {
+      "id": "0b05",
+      "fullName": "Beyonce",
+      "email": "b@mail.com",
+      "password": "1111111"
     }
-  ]
+  ],
+  "shopping-lists": []
 }
