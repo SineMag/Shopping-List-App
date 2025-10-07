@@ -57,6 +57,11 @@ body,
   overflow: auto;
 }
 
+/* Home quick actions */
+.homeGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 12px; }
+.homeCard { background: rgba(255,255,255,0.95); color: #111; border-radius: 14px; padding: 14px; box-shadow: 0 8px 20px rgba(0,0,0,.15); display: flex; flex-direction: column; gap: 8px; }
+.homeCardIcon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: #fdd048; color: #111; box-shadow: 0 6px 16px rgba(0,0,0,.18); }
+
 .navbar {
   color: white;
   padding: 1rem;

@@ -40,7 +40,14 @@
       "createdAt": "2025-10-07T09:41:34.125Z"
     }
   ],
-  "shopping-lists": [],
+  "shopping-lists": [
+    {
+      "id": "94f5",
+      "userId": "1ef5",
+      "name": "Name",
+      "createdAt": "2025-10-07T10:17:35.723Z"
+    }
+  ],
   "categories": [],
   "items": []
 }

@@ -306,7 +306,7 @@ export default function ListsPage() {
         </nav>
         <div className="categoriesManager">
           <h4 style={{ marginTop: 12 }}>Your Shopping Lists</h4>
-          <div className="row" style={{ gap: 6 }}>
+          <div className="row">
             <input
               placeholder="New list name"
               value={newListName}
@@ -328,7 +328,7 @@ export default function ListsPage() {
                 ) : (
                   <>
                     <button className="link" onClick={() => selectList(l.id)}>{l.name}</button>
-                    <span style={{ marginLeft: 6 }}>
+                    <span className="ml6">
                       <button onClick={() => onStartEditList(l.id, l.name)}>Edit</button>
                       <button onClick={() => onDeleteList(l.id)}>Delete</button>
                     </span>
@@ -339,7 +339,7 @@ export default function ListsPage() {
           </ul>
 
           <h4 style={{ marginTop: 16 }}>Categories</h4>
-          <div className="row" style={{ gap: 6 }}>
+          <div className="row">
             <input
               placeholder={editingCatId ? "Edit category" : "New category"}
               value={catName}
@@ -373,7 +373,7 @@ export default function ListsPage() {
                 >
                   {c.name}
                 </button>
-                <span style={{ marginLeft: 6 }}>
+                <span className="ml6">
                   <button onClick={() => startEditCategory(c)}>Edit</button>
                   <button onClick={() => deleteCategory(c.id)}>Delete</button>
                 </span>
@@ -458,11 +458,11 @@ export default function ListsPage() {
         </div>
 
         {/* Item form (adds to selected category) */}
-        <div className="row" style={{ gap: 8, margin: '12px 0' }}>
+        <div className="row formRow">
           <input className="textInput" placeholder="Item name" value={itemForm.name} onChange={(e) => setItemForm((p) => ({ ...p, name: e.target.value }))} />
           <input className="textInput" placeholder="Quantity" value={itemForm.quantity} onChange={(e) => setItemForm((p) => ({ ...p, quantity: e.target.value }))} />
           <input className="textInput" placeholder="Image URL (optional)" value={itemForm.image} onChange={(e) => setItemForm((p) => ({ ...p, image: e.target.value }))} />
-          <div className="row" style={{ gap: 4 }}>
+          <div className="row">
             <label htmlFor="itemImageFile">Item Image</label>
             <input
               id="itemImageFile"
@@ -499,7 +499,7 @@ export default function ListsPage() {
                 <div className="productInfo">
                   <h4>{p.name}</h4>
                 </div>
-                <div className="row" style={{ gap: 6 }}>
+                <div className="row">
                   <button className="addBtn" onClick={() => startEditItem(p as any)}>Edit</button>
                   <button className="addBtn" onClick={() => deleteItem(p.id as any)}>Delete</button>
                 </div>
