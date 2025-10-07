@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { IoHome } from "react-icons/io5";
+import { Link, useNavigate } from "react-router-dom";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 
 export default function LoginPage() {
@@ -9,6 +8,7 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [isFading, setIsFading] = useState(false);
+  const navigate = useNavigate();
 
   // Fade-out success message (same pattern as RegisterPage)
   useEffect(() => {
@@ -65,6 +65,8 @@ export default function LoginPage() {
         // Optionally: navigate or set auth state here
         // Reset password only for convenience
         setForm((prev) => ({ ...prev, password: "" }));
+        // Navigate to home after a short delay to allow message to render briefly
+        setTimeout(() => navigate("/home", { replace: true }), 300);
       })
       .catch((err: Error) => {
         if (err.message === "INVALID_CREDENTIALS") {

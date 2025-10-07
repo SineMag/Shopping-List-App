@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import RegistrationImage from "../assets/image 17.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function RegisterPage() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -82,6 +83,8 @@ export default function RegisterPage() {
         setErrors((prev) => ({ ...prev, submit: "" }));
         setSuccessMsg("Account created successfully!");
         setForm({ fullName: "", email: "", password: "", confirmPassword: "" });
+        // Navigate to home shortly after success message shows
+        setTimeout(() => navigate("/home", { replace: true }), 300);
       })
       .catch((err: Error) => {
         if (err.message === "EMAIL_EXISTS") {

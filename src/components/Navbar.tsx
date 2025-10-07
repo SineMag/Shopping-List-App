@@ -5,7 +5,7 @@ export default function Navbar() {
   return (
     <div className='navbar'>
       <h1>
-        <Link to="/register">Shopping List App</Link>
+        <Link to="/register">SMify</Link>
       </h1>
     </div>
   )
