@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.9.0",
+    "@types/bcryptjs": "^2.4.6",
     "axios": "^1.12.2",
+    "bcryptjs": "^3.0.2",
     "json-server": "^1.0.0-beta.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

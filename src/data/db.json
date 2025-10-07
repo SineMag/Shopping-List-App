@@ -29,67 +29,18 @@
       "fullName": "Some Name",
       "email": "some@mail.com",
       "password": "123456789"
+    },
+    {
+      "id": "1ef5",
+      "fullName": "Name",
+      "surname": "Sname",
+      "cell": "123456789",
+      "email": "em@mail.com",
+      "passwordHash": "$2b$10$GC0FdVhnAqjykCqByKkr5OiddgThLdP6xcVi7ByaehHRB81ABKO3y",
+      "createdAt": "2025-10-07T09:41:34.125Z"
     }
   ],
   "shopping-lists": [],
-  "categories": [
-    {
-      "id": "c1",
-      "name": "Coffee"
-    },
-    {
-      "id": "c2",
-      "name": "Tea"
-    }
-  ],
-  "items": [
-    {
-      "id": "1",
-      "name": "Bru Coffee",
-      "price": 10,
-      "category": "Coffee",
-      "image": "https://via.placeholder.com/300x200?text=Bru",
-      "createdAt": "2025-10-01T09:00:00.000Z"
-    },
-    {
-      "id": "2",
-      "name": "Nescafe 3 in 1",
-      "price": 15,
-      "category": "Coffee",
-      "image": "https://via.placeholder.com/300x200?text=3in1",
-      "createdAt": "2025-10-02T09:00:00.000Z"
-    },
-    {
-      "id": "3",
-      "name": "Nescafe 10x",
-      "price": 20,
-      "category": "Coffee",
-      "image": "https://via.placeholder.com/300x200?text=10x",
-      "createdAt": "2025-10-03T09:00:00.000Z"
-    },
-    {
-      "id": "4",
-      "name": "Cappuccino",
-      "price": 12,
-      "category": "Coffee",
-      "image": "https://via.placeholder.com/300x200?text=Cappuccino",
-      "createdAt": "2025-10-04T09:00:00.000Z"
-    },
-    {
-      "id": "5",
-      "name": "Arabica",
-      "price": 18,
-      "category": "Coffee",
-      "image": "https://via.placeholder.com/300x200?text=Arabica",
-      "createdAt": "2025-10-05T09:00:00.000Z"
-    },
-    {
-      "id": "6",
-      "name": "Robusta",
-      "price": 9,
-      "category": "Coffee",
-      "image": "https://via.placeholder.com/300x200?text=Robusta",
-      "createdAt": "2025-10-06T09:00:00.000Z"
-    }
-  ]
+  "categories": [],
+  "items": []
 }

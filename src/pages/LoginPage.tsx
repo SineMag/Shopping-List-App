@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import bcrypt from "bcryptjs";
 import { Link, useNavigate } from "react-router-dom";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 
@@ -42,46 +43,43 @@ export default function LoginPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
-    // Authenticate against json-server (users collection)
-    fetch(
-      `http://localhost:3001/users?email=${encodeURIComponent(
-        form.email
-      )}&password=${encodeURIComponent(form.password)}`
-    )
-      .then(async (res) => {
-        if (!res.ok) throw new Error("Lookup failed");
-        const users = await res.json();
-        if (!Array.isArray(users) || users.length === 0) {
-          throw new Error("INVALID_CREDENTIALS");
-        }
-      })
-      .then(() => {
-        setErrors((prev) => ({ ...prev, submit: "" }));
-        setSuccessMsg("Logged in successfully!");
-        // Optionally: navigate or set auth state here
-        // Reset password only for convenience
-        setForm((prev) => ({ ...prev, password: "" }));
-        // Navigate to home after a short delay to allow message to render briefly
-        setTimeout(() => navigate("/home", { replace: true }), 300);
-      })
-      .catch((err: Error) => {
-        if (err.message === "INVALID_CREDENTIALS") {
-          setErrors((prev) => ({
-            ...prev,
-            submit: "Invalid email or password",
-          }));
-        } else {
-          setErrors((prev) => ({
-            ...prev,
-            submit: "Login failed. Is json-server running on port 3001?",
-          }));
-        }
-      })
-      .finally(() => setSubmitting(false));
+    try {
+      // Lookup user by email
+      const res = await fetch(
+        `http://localhost:3001/users?email=${encodeURIComponent(form.email)}`
+      );
+      if (!res.ok) throw new Error("Lookup failed");
+      const users = await res.json();
+      if (!Array.isArray(users) || users.length === 0) {
+        throw new Error("INVALID_CREDENTIALS");
+      }
+      const user = users[0];
+      const ok = await bcrypt.compare(form.password, user.passwordHash || "");
+      if (!ok) throw new Error("INVALID_CREDENTIALS");
+
+      setErrors((prev) => ({ ...prev, submit: "" }));
+      setSuccessMsg("Logged in successfully!");
+      setForm((prev) => ({ ...prev, password: "" }));
+      // Persist auth and user, then navigate
+      localStorage.setItem("auth", "true");
+      localStorage.setItem(
+        "currentUser",
+        JSON.stringify({ id: user.id, fullName: user.fullName, surname: user.surname, cell: user.cell, email: user.email })
+      );
+      setTimeout(() => navigate("/home", { replace: true }), 300);
+    } catch (err: any) {
+      if (err.message === "INVALID_CREDENTIALS") {
+        setErrors((prev) => ({ ...prev, submit: "Invalid email or password" }));
+      } else {
+        setErrors((prev) => ({ ...prev, submit: "Login failed. Is json-server running on port 3001?" }));
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
