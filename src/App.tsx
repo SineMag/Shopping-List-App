@@ -10,6 +10,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import type { ReactElement } from "react";
 import HomePage from "./pages/HomePage.tsx";
 import ListsPage from "./pages/ListsPage.tsx";
+import CategoriesPage from "./pages/CategoriesPage.tsx";
 
 function App() {
   const isAuthenticated = () => localStorage.getItem("auth") === "true";
@@ -52,6 +53,14 @@ function App() {
               {/* Add this line */}
               <Route path="/dashboard" element={<Dashboard />} />{" "}
               {/* Add this line */}
+              <Route
+                path="/categories"
+                element={
+                  <ProtectedRoute>
+                    <CategoriesPage />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/lists"
                 element={

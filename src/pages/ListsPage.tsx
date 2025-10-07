@@ -11,6 +11,7 @@ export default function ListsPage() {
   const q = params.get("q") ?? "";
   const sort = params.get("sort") ?? "date_desc";
   const selectedListIdParam = params.get("list") ?? "";
+  const catParam = params.get("cat") ?? "";
 
   const dispatch = useDispatch<AppDispatch>();
   const { items, status, error } = useSelector((s: RootState) => s.items);
@@ -32,12 +33,6 @@ export default function ListsPage() {
     dispatch(fetchLists({ userId }));
   }, [dispatch, userId]);
 
-  // Fetch items filtered by listId and current params
-  useEffect(() => {
-    const listId = selectedListIdParam || undefined;
-    dispatch(fetchItems({ q, sort, listId }));
-  }, [dispatch, q, sort, selectedListIdParam]);
-
   // Categories state and CRUD (optional taxonomy separate from lists)
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
   const [selectedCatId, setSelectedCatId] = useState<string | null>(null);
@@ -49,16 +44,33 @@ export default function ListsPage() {
       .then((r) => r.json())
       .then((data: { id: string; name: string }[]) => {
         setCategories(data);
-        if (data.length && !selectedCatId) setSelectedCatId(data[0].id);
+        // If there is a cat param, select that category if found
+        if (catParam) {
+          const match = data.find((c) => c.name.toLowerCase() === catParam.toLowerCase());
+          if (match) setSelectedCatId(match.id);
+        } else if (data.length && !selectedCatId) {
+          setSelectedCatId(data[0].id);
+        }
       })
       .catch(() => setCategories([]));
-  }, []);
+  }, [catParam]);
 
   const filteredItems = useMemo(() => {
     if (!selectedCatId) return items;
     const name = categories.find((c) => c.id === selectedCatId)?.name;
     return name ? items.filter((i) => i.category === name) : items;
   }, [items, categories, selectedCatId]);
+
+  // Fetch items filtered by listId/category and current params
+  useEffect(() => {
+    const listId = selectedListIdParam || undefined;
+    // Resolve category name either from selectedCatId or catParam
+    const selectedCategoryName = (() => {
+      if (selectedCatId) return categories.find((c) => c.id === selectedCatId)?.name;
+      return catParam || undefined;
+    })();
+    dispatch(fetchItems({ q, sort, listId, category: selectedCategoryName }));
+  }, [dispatch, q, sort, selectedListIdParam, selectedCatId, categories, catParam]);
 
   const addCategory = async () => {
     const name = catName.trim();
@@ -105,7 +117,7 @@ export default function ListsPage() {
   };
 
   // Items CRUD state and handlers (per selected category)
-  const [itemForm, setItemForm] = useState<{ name: string; price: string; image?: string }>({ name: "", price: "", image: "" });
+  const [itemForm, setItemForm] = useState<{ name: string; price: string; quantity: string; notes: string; image?: string }>({ name: "", price: "", quantity: "1", notes: "", image: "" });
   const [itemEditingId, setItemEditingId] = useState<string | null>(null);
 
   const addItem = async () => {
@@ -113,10 +125,13 @@ export default function ListsPage() {
     if (!catName) return;
     const name = itemForm.name.trim();
     const price = Number(itemForm.price);
-    if (!name || isNaN(price)) return;
+    const quantity = Number(itemForm.quantity);
+    if (!name || isNaN(price) || isNaN(quantity)) return;
     const payload = {
       name,
       price,
+      quantity,
+      notes: itemForm.notes.trim(),
       category: catName,
       image: itemForm.image || 'https://via.placeholder.com/300x200?text=Image',
       createdAt: new Date().toISOString(),
@@ -139,28 +154,29 @@ export default function ListsPage() {
         next.set('sort', sort);
         return next;
       });
-      setItemForm({ name: '', price: '', image: '' });
+      setItemForm({ name: '', price: '', quantity: '1', notes: '', image: '' });
     }
   };
 
-  const startEditItem = (p: { id: string; name: string; price: number; image?: string }) => {
+  const startEditItem = (p: { id: string; name: string; price: number; quantity?: number; notes?: string; image?: string }) => {
     setItemEditingId(String(p.id));
-    setItemForm({ name: p.name, price: String(p.price ?? 0), image: p.image || '' });
+    setItemForm({ name: p.name, price: String(p.price ?? 0), quantity: String(p.quantity ?? 1), notes: p.notes || '', image: p.image || '' });
   };
 
   const saveItem = async () => {
     if (!itemEditingId) return;
     const name = itemForm.name.trim();
     const price = Number(itemForm.price);
-    if (!name || isNaN(price)) return;
+    const quantity = Number(itemForm.quantity);
+    if (!name || isNaN(price) || isNaN(quantity)) return;
     const res = await fetch(`http://localhost:3001/items/${itemEditingId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, price, image: itemForm.image }),
+      body: JSON.stringify({ name, price, quantity, notes: itemForm.notes.trim(), image: itemForm.image }),
     });
     if (res.ok) {
       setItemEditingId(null);
-      setItemForm({ name: '', price: '', image: '' });
+      setItemForm({ name: '', price: '', quantity: '1', notes: '', image: '' });
       // trigger refetch
       setParams((p) => {
         const next = new URLSearchParams(p);
@@ -318,7 +334,22 @@ export default function ListsPage() {
           <ul className="list">
             {categories.map((c) => (
               <li key={c.id} className={selectedCatId === c.id ? "active" : ""}>
-                <button className="link" onClick={() => setSelectedCatId(c.id)}>{c.name}</button>
+                <button
+                  className="link"
+                  onClick={() => {
+                    setSelectedCatId(c.id);
+                    const catNameSel = categories.find((x) => x.id === c.id)?.name;
+                    setParams((p) => {
+                      const next = new URLSearchParams(p);
+                      if (catNameSel) next.set("cat", catNameSel);
+                      next.set("q", q);
+                      next.set("sort", sort);
+                      return next;
+                    });
+                  }}
+                >
+                  {c.name}
+                </button>
                 <span style={{ marginLeft: 6 }}>
                   <button onClick={() => startEditCategory(c)}>Edit</button>
                   <button onClick={() => deleteCategory(c.id)}>Delete</button>
@@ -369,16 +400,30 @@ export default function ListsPage() {
 
         {/* Item form (adds to selected category) */}
         <div className="row" style={{ gap: 8, margin: '12px 0' }}>
-          <input placeholder="Item name" value={itemForm.name} onChange={(e) => setItemForm((p) => ({ ...p, name: e.target.value }))} />
-          <input placeholder="Price" value={itemForm.price} onChange={(e) => setItemForm((p) => ({ ...p, price: e.target.value }))} />
-          <input placeholder="Image URL (optional)" value={itemForm.image} onChange={(e) => setItemForm((p) => ({ ...p, image: e.target.value }))} />
+          <input className="textInput" placeholder="Item name" value={itemForm.name} onChange={(e) => setItemForm((p) => ({ ...p, name: e.target.value }))} />
+          <input className="textInput" placeholder="Price" value={itemForm.price} onChange={(e) => setItemForm((p) => ({ ...p, price: e.target.value }))} />
+          <input className="textInput" placeholder="Quantity" value={itemForm.quantity} onChange={(e) => setItemForm((p) => ({ ...p, quantity: e.target.value }))} />
+          <input className="textInput" placeholder="Image URL (optional)" value={itemForm.image} onChange={(e) => setItemForm((p) => ({ ...p, image: e.target.value }))} />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (!f) return;
+              const reader = new FileReader();
+              reader.onload = (ev) => setItemForm((p) => ({ ...p, image: (ev.target?.result as string) || p.image }));
+              reader.readAsDataURL(f);
+            }}
+            aria-label="Upload item image"
+          />
+          <input className="textInput" placeholder="Notes (optional)" value={itemForm.notes} onChange={(e) => setItemForm((p) => ({ ...p, notes: e.target.value }))} />
           {itemEditingId ? (
             <>
-              <button onClick={saveItem} disabled={!selectedCatId}>Save</button>
-              <button onClick={() => { setItemEditingId(null); setItemForm({ name: '', price: '', image: '' }); }}>Cancel</button>
+              <button className="primaryBtn" onClick={saveItem} disabled={!selectedCatId}>Save</button>
+              <button className="secondaryBtn" onClick={() => { setItemEditingId(null); setItemForm({ name: '', price: '', quantity: '1', notes: '', image: '' }); }}>Cancel</button>
             </>
           ) : (
-            <button onClick={addItem} disabled={!selectedCatId || !selectedListIdParam}>Add Item</button>
+            <button className="primaryBtn" onClick={addItem} disabled={!selectedCatId || !selectedListIdParam}>Add Item</button>
           )}
         </div>
 

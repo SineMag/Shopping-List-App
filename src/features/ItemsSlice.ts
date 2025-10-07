@@ -4,21 +4,26 @@ export type Item = {
   id: number
   name: string
   price: number
+  quantity?: number
+  notes?: string
   category: string
   image?: string
   createdAt?: string
   listId?: string | number
 }
 
-type FetchArgs = { q?: string; sort?: string; listId?: string | number }
+type FetchArgs = { q?: string; sort?: string; listId?: string | number; category?: string }
 
-function buildQuery({ q, sort, listId }: FetchArgs): string {
+function buildQuery({ q, sort, listId, category }: FetchArgs): string {
   const params = new URLSearchParams()
   if (q && q.trim()) {
     params.set('name_like', q.trim())
   }
   if (typeof listId !== 'undefined' && listId !== null && String(listId).trim() !== '') {
     params.set('listId', String(listId))
+  }
+  if (category && category.trim()) {
+    params.set('category', category.trim())
   }
   switch (sort) {
     case 'name_asc':
