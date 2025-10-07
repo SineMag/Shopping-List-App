@@ -48,6 +48,11 @@
       "createdAt": "2025-10-07T10:17:35.723Z"
     }
   ],
-  "categories": [],
+  "categories": [
+    {
+      "id": "d9a2",
+      "name": "Grocery"
+    }
+  ],
   "items": []
 }

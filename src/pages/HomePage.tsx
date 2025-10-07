@@ -13,6 +13,7 @@ export default function HomePage() {
     }
   }, []);
   const greetingName = currentUser?.fullName || currentUser?.name || "";
+  const isAuthed = useMemo(() => localStorage.getItem("auth") === "true", []);
   const handleLogout = () => {
     localStorage.removeItem("auth");
     localStorage.removeItem("currentUser");
@@ -24,19 +25,16 @@ export default function HomePage() {
       <nav className="homeNavBar">
         <div className="homeBrand">
           <LiaShoppingCartSolid size={60} />
-          <ul style={{listStyleType:'none'}}>
-            <li>
-              <Link className="homeNavButton" to="/register">
-                Register
-              </Link>
-              <br />
-            </li>
-            <li>
-              <Link className="homeNavButton" to="/login">
-                Login
-              </Link>
-            </li>
-          </ul>
+          {!isAuthed && (
+            <ul className="homeNavList">
+              <li>
+                <Link className="homeNavButton" to="/register">Register</Link>
+              </li>
+              <li>
+                <Link className="homeNavButton" to="/login">Login</Link>
+              </li>
+            </ul>
+          )}
         </div>
         <ul className="homeNavList" >
           <li>
@@ -61,11 +59,13 @@ export default function HomePage() {
             </Link>
           </li>
           <br />
-          <li>
-            <button className="homeNavButton" onClick={handleLogout} aria-label="Log out">
-              Logout
-            </button>
-          </li>
+          {isAuthed && (
+            <li>
+              <button className="homeNavButton" onClick={handleLogout} aria-label="Log out">
+                Logout
+              </button>
+            </li>
+          )}
         </ul>
       </nav>
       <section className="homeContent">

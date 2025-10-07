@@ -339,21 +339,6 @@ export default function ListsPage() {
           </ul>
 
           <h4 style={{ marginTop: 16 }}>Categories</h4>
-          <div className="row">
-            <input
-              placeholder={editingCatId ? "Edit category" : "New category"}
-              value={catName}
-              onChange={(e) => setCatName(e.target.value)}
-            />
-            {editingCatId ? (
-              <>
-                <button onClick={saveCategory}>Save</button>
-                <button onClick={() => { setEditingCatId(null); setCatName(""); }}>Cancel</button>
-              </>
-            ) : (
-              <button onClick={addCategory}>Add</button>
-            )}
-          </div>
           <ul className="list">
             {categories.map((c) => (
               <li key={c.id} className={selectedCatId === c.id ? "active" : ""}>
@@ -373,10 +358,7 @@ export default function ListsPage() {
                 >
                   {c.name}
                 </button>
-                <span className="ml6">
-                  <button onClick={() => startEditCategory(c)}>Edit</button>
-                  <button onClick={() => deleteCategory(c.id)}>Delete</button>
-                </span>
+                
               </li>
             ))}
           </ul>
