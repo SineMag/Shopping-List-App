@@ -23,7 +23,7 @@ export default function Navbar() {
   return (
     <div className='navbar'>
       <h1 className="brandLogo">
-        <Link to="/home" aria-label="Go to Home">SMify</Link>
+        <Link to={isAuthed ? "/home" : "/"} aria-label={isAuthed ? "Go to Home" : "Go to Landing"}>SMify</Link>
       </h1>
       <nav>
         {isAuthed ? (
@@ -36,6 +36,7 @@ export default function Navbar() {
           </>
         ) : (
           <>
+            <Link to="/" aria-label="Go to Landing">Home</Link>
             <Link to="/login" aria-label="Go to Login">Login</Link>
             <Link to="/register" aria-label="Go to Register" style={{ marginLeft: 12 }}>Register</Link>
           </>

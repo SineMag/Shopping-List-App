@@ -13,6 +13,7 @@ import ListsPage from "./pages/ListsPage.tsx";
 import CategoriesPage from "./pages/CategoriesPage.tsx";
 import NotFoundPage from "./pages/NotFoundPage.tsx";
 import { ToastProvider } from "./components/Toast.tsx";
+import LandingPage from "./pages/LandingPage.tsx";
 
 function App() {
   const isAuthenticated = () => localStorage.getItem("auth") === "true";
@@ -34,7 +35,7 @@ function App() {
             {/* Main section for the app */}
             <main>
             <Routes>
-              <Route path="/" element={<Navigate to="/home" replace />} />
+              <Route path="/" element={<LandingPage />} />
               <Route
                 path="/home"
                 element={

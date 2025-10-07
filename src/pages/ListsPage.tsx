@@ -33,11 +33,9 @@ export default function ListsPage() {
     dispatch(fetchLists({ userId }));
   }, [dispatch, userId]);
 
-  // Categories state and CRUD (optional taxonomy separate from lists)
+  // Categories (developer-managed)
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
   const [selectedCatId, setSelectedCatId] = useState<string | null>(null);
-  const [catName, setCatName] = useState("");
-  const [editingCatId, setEditingCatId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("http://localhost:3001/categories")
@@ -83,23 +81,6 @@ export default function ListsPage() {
     dispatch(fetchItems({ q, sort, listId, category: selectedCategoryName }));
   }, [dispatch, q, sort, selectedListIdParam, selectedCatId, categories, catParam]);
 
-  const addCategory = async () => {
-    const name = catName.trim();
-    if (!name) return;
-    if (categories.some((c) => c.name.toLowerCase() === name.toLowerCase())) return;
-    const res = await fetch("http://localhost:3001/categories", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name }),
-    });
-    if (res.ok) {
-      const created = (await res.json()) as { id: string; name: string };
-      setCategories((prev) => [created, ...prev]);
-      setCatName("");
-      setSelectedCatId(created.id);
-    }
-  };
-
   const onShareList = async () => {
     const id = selectedListIdParam;
     if (!id) return;
@@ -114,36 +95,28 @@ export default function ListsPage() {
     }
   };
 
-  const startEditCategory = (c: { id: string; name: string }) => {
-    setEditingCatId(c.id);
-    setCatName(c.name);
+  const toggleCompleted = (id: string | number) => {
+    setCompletedIds((prev) => ({ ...prev, [String(id)]: !prev[String(id)] }));
   };
 
-  const saveCategory = async () => {
-    if (!editingCatId) return;
-    const name = catName.trim();
-    if (!name) return;
-    const res = await fetch(`http://localhost:3001/categories/${editingCatId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: editingCatId, name }),
+  const lastUpdatedText = useMemo(() => {
+    const dates: number[] = [];
+    filteredItems.forEach((it: any) => {
+      if (it?.createdAt) dates.push(new Date(it.createdAt).getTime());
     });
-    if (res.ok) {
-      setCategories((prev) => prev.map((c) => (c.id === editingCatId ? { ...c, name } : c)));
-      setEditingCatId(null);
-      setCatName("");
-    }
-  };
+    if (!dates.length) return '';
+    const delta = Date.now() - Math.max(...dates);
+    const mins = Math.max(1, Math.floor(delta / 60000));
+    return `Last updated: ${mins} min ago`;
+  }, [filteredItems]);
 
-  const deleteCategory = async (id: string) => {
-    await fetch(`http://localhost:3001/categories/${id}`, { method: "DELETE" });
-    setCategories((prev) => prev.filter((c) => c.id !== id));
-    if (selectedCatId === id) setSelectedCatId(null);
-  };
+  // Developer-managed categories: no user CRUD here
 
   // Items CRUD state and handlers (per selected category)
   const [itemForm, setItemForm] = useState<{ name: string; quantity: string; notes: string; image?: string }>({ name: "", quantity: "1", notes: "", image: "" });
   const [itemEditingId, setItemEditingId] = useState<string | null>(null);
+  const [completedIds, setCompletedIds] = useState<Record<string, boolean>>({});
+  const [activeTab, setActiveTab] = useState<'list' | 'favorites'>('list');
 
   const addItem = async () => {
     const catName = categories.find((c) => c.id === selectedCatId)?.name;
@@ -245,6 +218,7 @@ export default function ListsPage() {
   const [editingListId, setEditingListId] = useState<string | number | null>(null);
   const [editingListName, setEditingListName] = useState("");
   const [shareMsg, setShareMsg] = useState("");
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   const selectList = (id: string | number) => {
     setParams((p) => {
@@ -295,8 +269,8 @@ export default function ListsPage() {
   return (
     <div className="listsLayout">
       {/* Left Sidebar */}
-      <aside className="listsSidebar">
-        <button className="hamburger" aria-label="menu">≡</button>
+      <aside className={`listsSidebar ${isNavOpen ? 'open' : 'collapsed'}`}>
+        <button className="hamburger" aria-label="menu" aria-expanded={isNavOpen ? "true" : "false"} onClick={() => setIsNavOpen((v) => !v)}>≡</button>
         <nav className="listsNav">
           <Link className="listsNavItem active" to="/lists">Home</Link>
           <Link className="listsNavItem" to="/categories">Categories</Link>
@@ -305,7 +279,7 @@ export default function ListsPage() {
           <Link className="listsNavItem" to="/settings">Settings</Link>
         </nav>
         <div className="categoriesManager">
-          <h4 style={{ marginTop: 12 }}>Your Shopping Lists</h4>
+          <h4 className="sidebarTitle">Your Shopping Lists</h4>
           <div className="row">
             <input
               placeholder="New list name"
@@ -319,8 +293,8 @@ export default function ListsPage() {
               <li key={l.id} className={String(selectedListIdParam) === String(l.id) ? "active" : ""}>
                 {editingListId === l.id ? (
                   <>
-                    <input value={editingListName} onChange={(e) => setEditingListName(e.target.value)} />
-                    <span style={{ marginLeft: 6 }}>
+                    <input aria-label="List name" value={editingListName} onChange={(e) => setEditingListName(e.target.value)} />
+                    <span className="ml6">
                       <button onClick={onSaveList}>Save</button>
                       <button onClick={() => { setEditingListId(null); setEditingListName(""); }}>Cancel</button>
                     </span>
@@ -338,7 +312,7 @@ export default function ListsPage() {
             ))}
           </ul>
 
-          <h4 style={{ marginTop: 16 }}>Categories</h4>
+          <h4 className="sidebarTitle">Categories</h4>
           <ul className="list">
             {categories.map((c) => (
               <li key={c.id} className={selectedCatId === c.id ? "active" : ""}>
@@ -391,7 +365,7 @@ export default function ListsPage() {
             <img className="userAvatar" src="https://i.pravatar.cc/40" alt="avatar" />
           </div>
           {selectedListIdParam && (
-            <div className="row" style={{ justifyContent: 'flex-end' }}>
+            <div className="row justifyEnd">
               <button className="secondaryBtn" onClick={onShareList}>Share</button>
               {shareMsg && <span className="muted">{shareMsg}</span>}
             </div>
@@ -427,7 +401,6 @@ export default function ListsPage() {
             </div>
           )}
         </section>
-
         <div className="bannerCard">
           <div className="bannerLeft">
             <LiaShoppingCartSolid size={62} />
@@ -463,60 +436,56 @@ export default function ListsPage() {
           {itemEditingId ? (
             <>
               <button className="primaryBtn" onClick={saveItem} disabled={!selectedCatId}>Save</button>
-              <button className="secondaryBtn" onClick={() => { setItemEditingId(null); setItemForm({ name: '', price: '', quantity: '1', notes: '', image: '' }); }}>Cancel</button>
+              <button className="secondaryBtn" onClick={() => { setItemEditingId(null); setItemForm({ name: '', quantity: '1', notes: '', image: '' }); }}>Cancel</button>
             </>
           ) : (
             <button className="primaryBtn" onClick={addItem} disabled={!selectedCatId || !selectedListIdParam}>Add Item</button>
           )}
+
         </div>
 
-        <h2 className="sectionTitle">Featured Products</h2>
+        <div className="mobileTabs">
+          <button className={`pill ${activeTab === 'list' ? 'active' : ''}`} onClick={() => setActiveTab('list')} aria-pressed={activeTab==='list' ? "true" : "false"}>Shopping List</button>
+          <button className={`pill ${activeTab === 'favorites' ? 'active' : ''}`} onClick={() => setActiveTab('favorites')} aria-pressed={activeTab==='favorites' ? "true" : "false"}>Favorites</button>
+          <button className="floatingAdd" aria-label="Add item" onClick={() => setItemEditingId(null)}>+</button>
+        </div>
+
+        <h2 className="sectionTitle">Items</h2>
         {status === 'loading' && <p>Loading...</p>}
         {status === 'failed' && <p className="error">{error || 'Failed to load items'}</p>}
+        {/* Mobile list (shown on small screens) */}
         {status !== 'loading' && (
-          <div className="cardsGrid">
+          <ul className="mobileList">
             {filteredItems.map((p) => (
-              <div className="productCard" key={p.id}>
-                <img src={p.image || 'https://via.placeholder.com/300x200?text=Image'} alt={p.name} />
-                <div className="productInfo">
-                  <h4>{p.name}</h4>
-                </div>
-                <div className="row">
-                  <button className="addBtn" onClick={() => startEditItem(p as any)}>Edit</button>
-                  <button className="addBtn" onClick={() => deleteItem(p.id as any)}>Delete</button>
-                </div>
-              </div>
+              <li key={p.id} className="mobileListItem">
+                <button className={`statusDot ${completedIds[String(p.id)] ? 'done' : ''}`} onClick={() => toggleCompleted(p.id)} aria-label={completedIds[String(p.id)] ? 'Mark as not done' : 'Mark as done'} />
+                <button className={`itemName ${completedIds[String(p.id)] ? 'line' : ''}`} onClick={() => startEditItem(p as any)}>{p.name}</button>
+                {Number(p.quantity ?? 1) > 1 && <span className="qtyBadge">{p.quantity}</span>}
+              </li>
             ))}
+          </ul>
+        )}
+
+        {/* Mobile sticky share bar */}
+        {selectedListIdParam && (
+          <div className="mobileShareBar">
+            <button className="dangerCircle" aria-label="Delete selected list" onClick={() => onDeleteList(selectedListIdParam)}>🗑️</button>
+            <button className="sharePill" onClick={onShareList}>Share List</button>
+            {lastUpdatedText && <small className="muted lastUpdated">{lastUpdatedText}</small>}
           </div>
         )}
       </section>
 
-      {/* Right Widgets */}
+      {/* Right Tips (no ordering here) */}
       <aside className="listsWidgets">
         <div className="widget">
-          <h3>Past Orders</h3>
-          {[1,2].map((i) => (
-            <div className="orderRow" key={i}>
-              <img src="https://via.placeholder.com/44" alt="order" />
-              <div className="orderMeta">
-                <strong>Starbuck Coffee</strong>
-                <span>$20.00</span>
-                <small>12 Jun, 2019</small>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="widget">
-          <h3>Latest Release</h3>
-          <img className="latestImg" src="https://via.placeholder.com/280x140?text=Latte" alt="latest" />
-          <div className="latestMeta">
-            <strong>Starbuck Coffee</strong>
-            <p>Pure Ghana based coco coffee with roasting</p>
-            <div className="latestFooter">
-              <span>$20.00</span>
-              <button className="addBtn">+</button>
-            </div>
-          </div>
+          <h3>Tips</h3>
+          <ul className="list">
+            <li>Use the search to quickly find items by name.</li>
+            <li>Select a category to filter your items.</li>
+            <li>Track multiple lists and switch between them.</li>
+            <li>Use Share to copy a link to your current list.</li>
+          </ul>
         </div>
       </aside>
     </div>

@@ -69,35 +69,36 @@ export default function HomePage() {
         </ul>
       </nav>
       <section className="homeContent">
-        <h1>Welcome{greetingName ? `, ${greetingName}` : ""}</h1>
-        <h2>Get ready to start shopping!</h2>
-        <div className="homeGrid">
-          <div className="homeCard">
-            <div className="homeCardIcon"><FaListUl size={26} /></div>
-            <h3>Your Lists</h3>
-            <p className="muted">Create and track multiple shopping lists.</p>
-            <Link className="homeNavButton" to="/lists">Open Lists</Link>
-          </div>
-          <div className="homeCard">
-            <div className="homeCardIcon"><FaTags size={26} /></div>
-            <h3>Categories</h3>
-            <p className="muted">Organise items for quick filtering.</p>
-            <Link className="homeNavButton" to="/categories">Manage Categories</Link>
-          </div>
-          <div className="homeCard">
-            <div className="homeCardIcon"><FaUserCog size={26} /></div>
-            <h3>Profile</h3>
-            <p className="muted">Update your details and avatar.</p>
-            <Link className="homeNavButton" to="/profile">View Profile</Link>
-          </div>
-          <div className="homeCard">
-            <div className="homeCardIcon"><FaShareAlt size={26} /></div>
-            <h3>Share</h3>
-            <p className="muted">Share lists with friends and family.</p>
-            <Link className="homeNavButton" to="/lists">Share a List</Link>
+        <div className="homeInner">
+          <h1>Welcome{greetingName ? `, ${greetingName}` : ""}</h1>
+          <h2>Get ready to start shopping!</h2>
+          <div className="homeGrid">
+            <div className="homeCard">
+              <div className="homeCardIcon"><FaListUl size={26} /></div>
+              <h3>Your Lists</h3>
+              <p className="muted">Create and track multiple shopping lists.</p>
+              <Link className="homeNavButton" to="/lists">Open Lists</Link>
+            </div>
+            <div className="homeCard">
+              <div className="homeCardIcon"><FaTags size={26} /></div>
+              <h3>Categories</h3>
+              <p className="muted">Organise items for quick filtering.</p>
+              <Link className="homeNavButton" to="/categories">Manage Categories</Link>
+            </div>
+            <div className="homeCard">
+              <div className="homeCardIcon"><FaUserCog size={26} /></div>
+              <h3>Profile</h3>
+              <p className="muted">Update your details and avatar.</p>
+              <Link className="homeNavButton" to="/profile">View Profile</Link>
+            </div>
+            <div className="homeCard">
+              <div className="homeCardIcon"><FaShareAlt size={26} /></div>
+              <h3>Share</h3>
+              <p className="muted">Share lists with friends and family.</p>
+              <Link className="homeNavButton" to="/lists">Share a List</Link>
+            </div>
           </div>
         </div>
       </section>
     </div>
-  );
-}
+  );}
