@@ -61,6 +61,17 @@ export default function ListsPage() {
     return name ? items.filter((i) => i.category === name) : items;
   }, [items, categories, selectedCatId]);
 
+  // Build a quick map of counts per listId for list cards
+  const listCounts = useMemo<Record<string, number>>(() => {
+    const m: Record<string, number> = {};
+    for (const it of items) {
+      const key = String(it.listId ?? '');
+      if (!key) continue;
+      m[key] = (m[key] || 0) + 1;
+    }
+    return m;
+  }, [items]);
+
   // Fetch items filtered by listId/category and current params
   useEffect(() => {
     const listId = selectedListIdParam || undefined;
@@ -131,19 +142,17 @@ export default function ListsPage() {
   };
 
   // Items CRUD state and handlers (per selected category)
-  const [itemForm, setItemForm] = useState<{ name: string; price: string; quantity: string; notes: string; image?: string }>({ name: "", price: "", quantity: "1", notes: "", image: "" });
+  const [itemForm, setItemForm] = useState<{ name: string; quantity: string; notes: string; image?: string }>({ name: "", quantity: "1", notes: "", image: "" });
   const [itemEditingId, setItemEditingId] = useState<string | null>(null);
 
   const addItem = async () => {
     const catName = categories.find((c) => c.id === selectedCatId)?.name;
     if (!catName) return;
     const name = itemForm.name.trim();
-    const price = Number(itemForm.price);
     const quantity = Number(itemForm.quantity);
-    if (!name || isNaN(price) || isNaN(quantity)) return;
+    if (!name || isNaN(quantity)) return;
     const payload = {
       name,
-      price,
       quantity,
       notes: itemForm.notes.trim(),
       category: catName,
@@ -168,29 +177,28 @@ export default function ListsPage() {
         next.set('sort', sort);
         return next;
       });
-      setItemForm({ name: '', price: '', quantity: '1', notes: '', image: '' });
+      setItemForm({ name: '', quantity: '1', notes: '', image: '' });
     }
   };
 
-  const startEditItem = (p: { id: string; name: string; price: number; quantity?: number; notes?: string; image?: string }) => {
+  const startEditItem = (p: { id: string; name: string; quantity?: number; notes?: string; image?: string }) => {
     setItemEditingId(String(p.id));
-    setItemForm({ name: p.name, price: String(p.price ?? 0), quantity: String(p.quantity ?? 1), notes: p.notes || '', image: p.image || '' });
+    setItemForm({ name: p.name, quantity: String(p.quantity ?? 1), notes: p.notes || '', image: p.image || '' });
   };
 
   const saveItem = async () => {
     if (!itemEditingId) return;
     const name = itemForm.name.trim();
-    const price = Number(itemForm.price);
     const quantity = Number(itemForm.quantity);
-    if (!name || isNaN(price) || isNaN(quantity)) return;
+    if (!name || isNaN(quantity)) return;
     const res = await fetch(`http://localhost:3001/items/${itemEditingId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, price, quantity, notes: itemForm.notes.trim(), image: itemForm.image }),
+      body: JSON.stringify({ name, quantity, notes: itemForm.notes.trim(), image: itemForm.image }),
     });
     if (res.ok) {
       setItemEditingId(null);
-      setItemForm({ name: '', price: '', quantity: '1', notes: '', image: '' });
+      setItemForm({ name: '', quantity: '1', notes: '', image: '' });
       // trigger refetch
       setParams((p) => {
         const next = new URLSearchParams(p);
@@ -408,6 +416,36 @@ export default function ListsPage() {
           )}
         </header>
 
+        {/* User Lists as cards */}
+        <section className="listsCardsSection">
+          <h2 className="sectionTitle">Your Lists</h2>
+          {listsState.status === 'loading' && <p>Loading your lists...</p>}
+          {listsState.status === 'failed' && <p className="error">{listsState.error || 'Failed to load lists'}</p>}
+          {listsState.items.length === 0 && listsState.status !== 'loading' && (
+            <p className="muted">No lists yet. Create one from the sidebar.</p>
+          )}
+          {listsState.items.length > 0 && (
+            <div className="listCardsGrid">
+              {listsState.items.map((l) => (
+                <div key={l.id} className={`listCard ${String(selectedListIdParam) === String(l.id) ? 'active' : ''}`}>
+                  <div className="listCardHeader">
+                    <h3 className="listCardTitle">{l.name}</h3>
+                    <span className="listCountChip">{listCounts[String(l.id)] || 0} items</span>
+                  </div>
+                  <div className="listCardMeta">
+                    <small className="muted">{new Date(l.createdAt).toLocaleDateString()}</small>
+                  </div>
+                  <div className="listCardActions">
+                    <button className="primaryBtn" onClick={() => selectList(l.id)}>Open</button>
+                    <button className="secondaryBtn" onClick={() => onStartEditList(l.id, l.name)}>Edit</button>
+                    <button className="secondaryBtn" onClick={() => onDeleteList(l.id)}>Delete</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
         <div className="bannerCard">
           <div className="bannerLeft">
             <LiaShoppingCartSolid size={62} />
@@ -422,7 +460,6 @@ export default function ListsPage() {
         {/* Item form (adds to selected category) */}
         <div className="row" style={{ gap: 8, margin: '12px 0' }}>
           <input className="textInput" placeholder="Item name" value={itemForm.name} onChange={(e) => setItemForm((p) => ({ ...p, name: e.target.value }))} />
-          <input className="textInput" placeholder="Price" value={itemForm.price} onChange={(e) => setItemForm((p) => ({ ...p, price: e.target.value }))} />
           <input className="textInput" placeholder="Quantity" value={itemForm.quantity} onChange={(e) => setItemForm((p) => ({ ...p, quantity: e.target.value }))} />
           <input className="textInput" placeholder="Image URL (optional)" value={itemForm.image} onChange={(e) => setItemForm((p) => ({ ...p, image: e.target.value }))} />
           <div className="row" style={{ gap: 4 }}>
@@ -461,7 +498,6 @@ export default function ListsPage() {
                 <img src={p.image || 'https://via.placeholder.com/300x200?text=Image'} alt={p.name} />
                 <div className="productInfo">
                   <h4>{p.name}</h4>
-                  <p className="price">${(p.price ?? 0).toFixed(2)}</p>
                 </div>
                 <div className="row" style={{ gap: 6 }}>
                   <button className="addBtn" onClick={() => startEditItem(p as any)}>Edit</button>

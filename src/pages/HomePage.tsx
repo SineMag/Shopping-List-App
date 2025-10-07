@@ -39,6 +39,11 @@ export default function HomePage() {
         </div>
         <ul className="homeNavList" >
           <li>
+            <Link className="homeNavButton" to="/lists">
+              Shopping Lists
+            </Link>
+          </li>
+          <li>
             <Link className="homeNavButton" to="/categories">
               Categories
             </Link>

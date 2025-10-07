@@ -268,6 +268,7 @@ main {
 }
 
 .loginButton:disabled {
+{{ ... }}
   opacity: 0.7;
   cursor: not-allowed;
 }
@@ -591,6 +592,17 @@ main {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
 }
+
+/* List Cards */
+.listsCardsSection { margin: 12px 0 16px; }
+.listCardsGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.listCard { background: #f9fafb; border-radius: 14px; padding: 12px; box-shadow: 0 6px 16px rgba(0,0,0,.08); border: 1px solid rgba(0,0,0,.06); }
+.listCard.active { border-color: #fdd048; box-shadow: 0 8px 20px rgba(0,0,0,.12); }
+.listCardHeader { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.listCardTitle { font-size: 1rem; }
+.listCountChip { background: #e5e7eb; color: #111; border-radius: 999px; padding: 2px 8px; font-size: .8rem; }
+.listCardMeta { margin: 6px 0 8px; }
+.listCardActions { display: flex; align-items: center; gap: 6px; }
 
 .productCard {
   background: #f9fafb;
