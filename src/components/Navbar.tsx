@@ -28,6 +28,7 @@ export default function Navbar() {
       <nav>
         {isAuthed ? (
           <>
+            <Link to="/categories" aria-label="Go to Categories">Categories</Link>
             <Link to="/lists" aria-label="Go to Lists">Shopping Lists</Link>
             <button type="button" onClick={handleLogout} aria-label="Log out" className="logoutBtn">
               Logout

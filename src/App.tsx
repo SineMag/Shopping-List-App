@@ -11,6 +11,8 @@ import type { ReactElement } from "react";
 import HomePage from "./pages/HomePage.tsx";
 import ListsPage from "./pages/ListsPage.tsx";
 import CategoriesPage from "./pages/CategoriesPage.tsx";
+import NotFoundPage from "./pages/NotFoundPage.tsx";
+import { ToastProvider } from "./components/Toast.tsx";
 
 function App() {
   const isAuthenticated = () => localStorage.getItem("auth") === "true";
@@ -25,11 +27,12 @@ function App() {
 
   return (
     <>
-      <div className="container">
-        <BrowserRouter>
-          <Navbar />
-          {/* Main section for the app */}
-          <main>
+      <ToastProvider>
+        <div className="container">
+          <BrowserRouter>
+            <Navbar />
+            {/* Main section for the app */}
+            <main>
             <Routes>
               <Route path="/" element={<Navigate to="/home" replace />} />
               <Route
@@ -69,11 +72,13 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
-          </main>
-          <Footer />
-        </BrowserRouter>
-      </div>
+            </main>
+            <Footer />
+          </BrowserRouter>
+        </div>
+      </ToastProvider>
     </>
   );
 }

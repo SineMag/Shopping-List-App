@@ -89,6 +89,20 @@ export default function ListsPage() {
     }
   };
 
+  const onShareList = async () => {
+    const id = selectedListIdParam;
+    if (!id) return;
+    const url = `${window.location.origin}/lists?list=${encodeURIComponent(String(id))}${catParam ? `&cat=${encodeURIComponent(catParam)}` : ''}${q ? `&q=${encodeURIComponent(q)}` : ''}${sort ? `&sort=${encodeURIComponent(sort)}` : ''}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setShareMsg("Link copied to clipboard");
+      setTimeout(() => setShareMsg(""), 1500);
+    } catch {
+      setShareMsg("Failed to copy link");
+      setTimeout(() => setShareMsg(""), 1500);
+    }
+  };
+
   const startEditCategory = (c: { id: string; name: string }) => {
     setEditingCatId(c.id);
     setCatName(c.name);
@@ -222,6 +236,7 @@ export default function ListsPage() {
   const [newListName, setNewListName] = useState("");
   const [editingListId, setEditingListId] = useState<string | number | null>(null);
   const [editingListName, setEditingListName] = useState("");
+  const [shareMsg, setShareMsg] = useState("");
 
   const selectList = (id: string | number) => {
     setParams((p) => {
@@ -385,6 +400,12 @@ export default function ListsPage() {
             <span className="userName">{currentUser?.fullName || "User"}</span>
             <img className="userAvatar" src="https://i.pravatar.cc/40" alt="avatar" />
           </div>
+          {selectedListIdParam && (
+            <div className="row" style={{ justifyContent: 'flex-end' }}>
+              <button className="secondaryBtn" onClick={onShareList}>Share</button>
+              {shareMsg && <span className="muted">{shareMsg}</span>}
+            </div>
+          )}
         </header>
 
         <div className="bannerCard">
@@ -404,18 +425,21 @@ export default function ListsPage() {
           <input className="textInput" placeholder="Price" value={itemForm.price} onChange={(e) => setItemForm((p) => ({ ...p, price: e.target.value }))} />
           <input className="textInput" placeholder="Quantity" value={itemForm.quantity} onChange={(e) => setItemForm((p) => ({ ...p, quantity: e.target.value }))} />
           <input className="textInput" placeholder="Image URL (optional)" value={itemForm.image} onChange={(e) => setItemForm((p) => ({ ...p, image: e.target.value }))} />
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (!f) return;
-              const reader = new FileReader();
-              reader.onload = (ev) => setItemForm((p) => ({ ...p, image: (ev.target?.result as string) || p.image }));
-              reader.readAsDataURL(f);
-            }}
-            aria-label="Upload item image"
-          />
+          <div className="row" style={{ gap: 4 }}>
+            <label htmlFor="itemImageFile">Item Image</label>
+            <input
+              id="itemImageFile"
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (!f) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => setItemForm((p) => ({ ...p, image: (ev.target?.result as string) || p.image }));
+                reader.readAsDataURL(f);
+              }}
+            />
+          </div>
           <input className="textInput" placeholder="Notes (optional)" value={itemForm.notes} onChange={(e) => setItemForm((p) => ({ ...p, notes: e.target.value }))} />
           {itemEditingId ? (
             <>
