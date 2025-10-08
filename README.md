@@ -1,12 +1,12 @@
+<img src="https://socialify.git.ci/SineMag/Shopping-List-App/image?language=1&owner=1&name=1&stargazers=1&theme=Light" alt="Shopping-List-App" width="640" height="320" />
+
 # Shopping List App
 
 A full-featured shopping list application built with **React**, **TypeScript**, **Redux Toolkit**, and **json-server**. This app allows users to manage multiple shopping lists with complete CRUD functionality, user authentication, and advanced features like search, sorting, and URL-based filtering.
 
 ## 🎯 Project Overview
 
-**Developer:** Sinenhlanhla Magubane  
-**Email:** snenhlanhlamagubane99@gmail.com  
-**Due Date:** 10 October 2025  
+**Developer:** Sinenhlanhla Magubane   
 **Framework:** React 19 with TypeScript  
 **State Management:** Redux Toolkit  
 **Backend:** json-server  
@@ -64,7 +64,7 @@ This is Task 5 from the React curriculum (Lesson 5), demonstrating modern React 
 
 1. **Clone the repository**
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/SineMag/Shopping-List-App.git
    cd "Shopping List App"
    ```
 
@@ -363,7 +363,7 @@ This project is submitted as part of academic coursework and is subject to the i
 ## 👤 Author
 
 **Sinenhlanhla Magubane**  
-Email: snenhlanhlamagubane99@gmail.com  
+GitHub: https://github.com/SineMag/
 
 ---
 
@@ -377,4 +377,3 @@ Email: snenhlanhlamagubane99@gmail.com
 
 ---
 
-**Declaration**: I hereby declare that this work is entirely my own and that I have used no other sources than those cited and acknowledged. I understand the definition and consequences of plagiarism and I confirm that this submission complies with the academic integrity policy of this institution.
