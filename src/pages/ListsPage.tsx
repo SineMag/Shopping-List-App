@@ -468,15 +468,27 @@ export default function ListsPage() {
             <div className="listCardsGrid">
               {listsState.items.map((l) => (
                 <div key={l.id} className={`listCard ${String(selectedListIdParam) === String(l.id) ? 'active' : ''}`}>
-                  <div className="listCardHeader">
-                    <h3 className="listCardTitle">{l.name}</h3>
-                    <span className="listCountChip">{listCounts[String(l.id)] || 0} items</span>
-                  </div>
-                  <div className="listCardMeta">
-                    <small className="muted">{new Date(l.createdAt).toLocaleDateString()}</small>
-                  </div>
-                  
-                  {addingToListId === l.id ? (
+                  {l.image && (
+                    <div className="listCardImageHeader">
+                      <img src={l.image} alt={l.name} />
+                      <div className="listCardOverlay">
+                        <h3 className="listCardTitleOverlay">{l.name}</h3>
+                        <span className="listCountChipOverlay">{listCounts[String(l.id)] || 0} items</span>
+                      </div>
+                    </div>
+                  )}
+                  {!l.image && (
+                    <div className="listCardHeader">
+                      <h3 className="listCardTitle">{l.name}</h3>
+                      <span className="listCountChip">{listCounts[String(l.id)] || 0} items</span>
+                    </div>
+                  )}
+                  <div className="listCardBody">
+                    <div className="listCardMeta">
+                      <small className="muted">{new Date(l.createdAt).toLocaleDateString()}</small>
+                    </div>
+                    
+                    {addingToListId === l.id ? (
                     <div className="listCardItemForm">
                       <input 
                         className="textInput" 
@@ -510,6 +522,7 @@ export default function ListsPage() {
                       <button className="secondaryBtn" onClick={() => onDeleteList(l.id)}>Delete</button>
                     </div>
                   )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -570,17 +583,40 @@ export default function ListsPage() {
         </div>
         {status === 'loading' && <p>Loading...</p>}
         {status === 'failed' && <p className="error">{error || 'Failed to load items'}</p>}
-        {/* Mobile list (shown on small screens) */}
-        {status !== 'loading' && (
-          <ul className="mobileList">
-            {filteredItems.map((p) => (
-              <li key={p.id} className="mobileListItem">
-                <button className={`statusDot ${completedIds[String(p.id)] ? 'done' : ''}`} onClick={() => toggleCompleted(p.id)} aria-label={completedIds[String(p.id)] ? 'Mark as not done' : 'Mark as done'} />
-                <button className={`itemName ${completedIds[String(p.id)] ? 'line' : ''}`} onClick={() => startEditItem(p as any)}>{p.name}</button>
-                {Number(p.quantity ?? 1) > 1 && <span className="qtyBadge">{p.quantity}</span>}
-              </li>
+        
+        {/* Items as Cards */}
+        {status !== 'loading' && filteredItems.length === 0 && (
+          <p className="muted">No items yet. Add items to get started.</p>
+        )}
+        {status !== 'loading' && filteredItems.length > 0 && (
+          <div className="itemCardsGrid">
+            {filteredItems.map((item) => (
+              <div key={item.id} className={`itemCard ${completedIds[String(item.id)] ? 'completed' : ''}`}>
+                <div className="itemCardImage">
+                  <img src={item.image || 'https://via.placeholder.com/300x200?text=Item'} alt={item.name} />
+                  <button 
+                    className={`itemCheckbox ${completedIds[String(item.id)] ? 'checked' : ''}`} 
+                    onClick={() => toggleCompleted(item.id)}
+                    aria-label={completedIds[String(item.id)] ? 'Mark as not done' : 'Mark as done'}
+                  >
+                    {completedIds[String(item.id)] ? '✓' : ''}
+                  </button>
+                </div>
+                <div className="itemCardContent">
+                  <h3 className="itemCardTitle">{item.name}</h3>
+                  <div className="itemCardMeta">
+                    <span className="itemCategory">{item.category}</span>
+                    <span className="itemQuantity">Qty: {item.quantity || 1}</span>
+                  </div>
+                  {item.notes && <p className="itemNotes">{item.notes}</p>}
+                  <div className="itemCardActions">
+                    <button className="secondaryBtn" onClick={() => startEditItem(item as any)}>Edit</button>
+                    <button className="dangerBtn" onClick={() => deleteItem(item.id)}>Delete</button>
+                  </div>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
 
         {/* Mobile sticky share bar */}

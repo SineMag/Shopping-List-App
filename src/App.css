@@ -725,10 +725,162 @@ main {
 .listCardTitle { font-size: 1rem; }
 .listCountChip { background: #e5e7eb; color: #111; border-radius: 999px; padding: 2px 8px; font-size: .8rem; }
 .listCardMeta { margin: 6px 0 8px; }
-.listCardActions { display: flex; align-items: center; gap: 6px; }
+.listCardBody { padding: 12px; }
+.listCardActions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .listCardItemForm { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
 .listCardItemForm .textInput { width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 8px; font-size: .9rem; }
-.listCardFormActions { display: flex; gap: 6px; }
+.listCardFormActions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* List Card Image Header */
+.listCardImageHeader { 
+  position: relative; 
+  width: 100%; 
+  height: 140px; 
+  overflow: hidden;
+  border-radius: 14px 14px 0 0;
+}
+.listCardImageHeader img { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover;
+}
+.listCardOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.listCardTitleOverlay { 
+  font-size: 1rem; 
+  color: white;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+.listCountChipOverlay { 
+  background: rgba(253, 208, 72, 0.9); 
+  color: #111; 
+  border-radius: 999px; 
+  padding: 4px 10px; 
+  font-size: .8rem;
+  font-weight: 600;
+}
+
+/* Item Cards */
+.itemCardsGrid { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
+  gap: 16px; 
+  margin-top: 16px;
+}
+.itemCard { 
+  background: #fff; 
+  border-radius: 12px; 
+  overflow: hidden; 
+  box-shadow: 0 4px 12px rgba(0,0,0,.08); 
+  border: 1px solid rgba(0,0,0,.06);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.itemCard:hover { 
+  transform: translateY(-4px); 
+  box-shadow: 0 8px 20px rgba(0,0,0,.15); 
+}
+.itemCard.completed { 
+  opacity: 0.7;
+}
+.itemCardImage { 
+  position: relative; 
+  width: 100%; 
+  height: 180px; 
+  overflow: hidden;
+}
+.itemCardImage img { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover;
+}
+.itemCheckbox {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  border: 2px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all .2s ease;
+}
+.itemCheckbox:hover {
+  background: #fff;
+  border-color: #fdd048;
+  transform: scale(1.1);
+}
+.itemCheckbox.checked {
+  background: #10b981;
+  border-color: #10b981;
+  color: white;
+}
+.itemCardContent { 
+  padding: 14px; 
+}
+.itemCardTitle { 
+  font-size: 1.1rem; 
+  font-weight: 700; 
+  margin: 0 0 8px; 
+  color: #111827;
+}
+.itemCardMeta { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  margin-bottom: 8px;
+}
+.itemCategory { 
+  background: #e5e7eb; 
+  padding: 4px 10px; 
+  border-radius: 12px; 
+  font-size: 0.75rem; 
+  font-weight: 600;
+  color: #4b5563;
+}
+.itemQuantity { 
+  font-size: 0.85rem; 
+  font-weight: 600; 
+  color: #6b7280;
+}
+.itemNotes { 
+  font-size: 0.85rem; 
+  color: #6b7280; 
+  margin: 8px 0; 
+  line-height: 1.4;
+}
+.itemCardActions { 
+  display: flex; 
+  gap: 8px; 
+  margin-top: 12px;
+}
+.dangerBtn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+.dangerBtn:hover {
+  background: #dc2626;
+}
 
 .productCard {
   background: #f9fafb;
@@ -1690,5 +1842,249 @@ main {
   .ctaPrimary, .ctaSecondary {
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
+  }
+}
+
+/* =============================================
+   COMPREHENSIVE MEDIA QUERIES FOR ALL BREAKPOINTS
+   ============================================= */
+
+/* 1200px and above - Desktop Large */
+@media (min-width: 1200px) {
+  .listCardsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+  
+  .itemCardsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+  
+  .listsLayout {
+    grid-template-columns: 280px 1fr 320px;
+  }
+}
+
+/* 1024px - Laptop/Desktop */
+@media (max-width: 1024px) {
+  .listsLayout {
+    grid-template-columns: 260px 1fr 280px;
+  }
+  
+  .listCardsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 10px;
+  }
+  
+  .itemCardsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+  }
+  
+  .listCardActions {
+    gap: 4px;
+  }
+  
+  .listCardActions button {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+  
+  .itemCardActions button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+}
+
+/* 768px - Tablet */
+@media (max-width: 768px) {
+  .listsLayout {
+    grid-template-columns: 1fr;
+  }
+  
+  .listsSidebar {
+    position: fixed;
+    left: -100%;
+    top: 0;
+    height: 100vh;
+    width: 280px;
+    background: white;
+    z-index: 1000;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  }
+  
+  .listsSidebar.open {
+    left: 0;
+  }
+  
+  .listsWidgets {
+    display: none;
+  }
+  
+  .listCardsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  
+  .itemCardsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  
+  .listsHeader {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .searchBox {
+    width: 100%;
+  }
+  
+  .userChip {
+    font-size: 0.85rem;
+  }
+  
+  .listCardImageHeader {
+    height: 120px;
+  }
+  
+  .itemCardImage {
+    height: 150px;
+  }
+  
+  .itemsHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .itemsHeader button {
+    width: 100%;
+  }
+}
+
+/* 480px - Mobile Large */
+@media (max-width: 480px) {
+  .listCardsGrid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .itemCardsGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .listCardActions {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .listCardActions button {
+    width: 100%;
+    padding: 8px;
+  }
+  
+  .itemCardActions {
+    flex-direction: column;
+  }
+  
+  .itemCardActions button {
+    width: 100%;
+  }
+  
+  .listCardFormActions {
+    flex-direction: column;
+  }
+  
+  .listCardFormActions button {
+    width: 100%;
+  }
+  
+  .row.formRow {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .row.formRow input,
+  .row.formRow button {
+    width: 100%;
+  }
+  
+  .userChip .userName {
+    display: none;
+  }
+  
+  .listCardImageHeader {
+    height: 100px;
+  }
+  
+  .itemCardImage {
+    height: 130px;
+  }
+  
+  .sectionTitle {
+    font-size: 1.25rem;
+  }
+  
+  .hamburger {
+    display: block;
+  }
+}
+
+/* 320px - Mobile Small */
+@media (max-width: 320px) {
+  .listCard {
+    padding: 8px;
+  }
+  
+  .listCardBody {
+    padding: 8px;
+  }
+  
+  .itemCard {
+    font-size: 0.9rem;
+  }
+  
+  .listCardImageHeader {
+    height: 80px;
+  }
+  
+  .itemCardImage {
+    height: 110px;
+  }
+  
+  .listCardTitleOverlay,
+  .itemCardTitle {
+    font-size: 0.95rem;
+  }
+  
+  .listCardActions button,
+  .itemCardActions button {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+  
+  .userAvatar {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .userNotif {
+    font-size: 0.9rem;
+  }
+  
+  .searchBox {
+    padding: 6px 10px;
+  }
+  
+  .sortSelect {
+    padding: 6px 8px;
+    font-size: 0.85rem;
+  }
+  
+  .textInput {
+    padding: 6px 8px;
+    font-size: 0.85rem;
   }
 }
