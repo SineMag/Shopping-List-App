@@ -1,36 +1,6 @@
 {
   "users": [
     {
-      "id": "d492",
-      "fullName": "S",
-      "email": "s@mail.com",
-      "password": "111111"
-    },
-    {
-      "id": "d337",
-      "fullName": "S",
-      "email": "s@mail.co.za",
-      "password": "121212121212"
-    },
-    {
-      "id": "0b05",
-      "fullName": "Beyonce",
-      "email": "b@mail.com",
-      "password": "1111111"
-    },
-    {
-      "id": "0dfb",
-      "fullName": "Full Name",
-      "email": "e@mail.com",
-      "password": "123456"
-    },
-    {
-      "id": "affa",
-      "fullName": "Some Name",
-      "email": "some@mail.com",
-      "password": "123456789"
-    },
-    {
       "id": "1ef5",
       "fullName": "Name",
       "surname": "Sname",
@@ -38,21 +8,133 @@
       "email": "em@mail.com",
       "passwordHash": "$2b$10$GC0FdVhnAqjykCqByKkr5OiddgThLdP6xcVi7ByaehHRB81ABKO3y",
       "createdAt": "2025-10-07T09:41:34.125Z"
+    },
+    {
+      "id": "e707",
+      "fullName": "User",
+      "surname": "Name",
+      "cell": "123456789",
+      "email": "user@name.com",
+      "passwordHash": "$2b$10$aeTMeDbU8uCxtaYxSGxmmexlfkFLuqyi.NHQB3ZuKeVBaswz7MpSC",
+      "createdAt": "2025-10-08T09:17:53.178Z"
     }
   ],
   "shopping-lists": [
     {
       "id": "94f5",
       "userId": "1ef5",
-      "name": "Name",
+      "name": "Weekly Groceries",
       "createdAt": "2025-10-07T10:17:35.723Z"
+    },
+    {
+      "id": "94f6",
+      "userId": "1ef5",
+      "name": "Home Supplies",
+      "createdAt": "2025-10-07T10:20:15.723Z"
     }
   ],
   "categories": [
     {
-      "id": "d9a2",
-      "name": "Grocery"
+      "id": "cat1",
+      "name": "Groceries"
+    },
+    {
+      "id": "cat2",
+      "name": "Dairy"
+    },
+    {
+      "id": "cat3",
+      "name": "Produce"
+    },
+    {
+      "id": "cat4",
+      "name": "Meat"
+    },
+    {
+      "id": "cat5",
+      "name": "Bakery"
+    },
+    {
+      "id": "cat6",
+      "name": "Beverages"
+    },
+    {
+      "id": "cat7",
+      "name": "Household"
+    },
+    {
+      "id": "cat8",
+      "name": "Personal Care"
+    },
+    {
+      "id": "cat9",
+      "name": "Frozen Foods"
+    },
+    {
+      "id": "cat10",
+      "name": "Snacks"
     }
   ],
-  "items": []
+  "items": [
+    {
+      "id": "1",
+      "name": "Milk",
+      "quantity": 2,
+      "notes": "2 liters",
+      "category": "Dairy",
+      "image": "https://via.placeholder.com/300x200?text=Milk",
+      "createdAt": "2025-10-07T10:00:00.000Z",
+      "listId": "94f5"
+    },
+    {
+      "id": "2",
+      "name": "Bread",
+      "quantity": 1,
+      "notes": "Whole wheat",
+      "category": "Bakery",
+      "image": "https://via.placeholder.com/300x200?text=Bread",
+      "createdAt": "2025-10-07T10:05:00.000Z",
+      "listId": "94f5"
+    },
+    {
+      "id": "3",
+      "name": "Apples",
+      "quantity": 6,
+      "notes": "Red apples",
+      "category": "Produce",
+      "image": "https://via.placeholder.com/300x200?text=Apples",
+      "createdAt": "2025-10-07T10:10:00.000Z",
+      "listId": "94f5"
+    },
+    {
+      "id": "4",
+      "name": "Chicken Breast",
+      "quantity": 1,
+      "notes": "500g pack",
+      "category": "Meat",
+      "image": "https://via.placeholder.com/300x200?text=Chicken",
+      "createdAt": "2025-10-07T10:15:00.000Z",
+      "listId": "94f5"
+    },
+    {
+      "id": "5",
+      "name": "Cleaning Spray",
+      "quantity": 1,
+      "notes": "Multi-surface",
+      "category": "Household",
+      "image": "https://via.placeholder.com/300x200?text=Cleaner",
+      "createdAt": "2025-10-07T10:20:00.000Z",
+      "listId": "94f6"
+    },
+    {
+      "id": "6",
+      "name": "Paper Towels",
+      "quantity": 2,
+      "notes": "Large rolls",
+      "category": "Household",
+      "image": "https://via.placeholder.com/300x200?text=Paper+Towels",
+      "createdAt": "2025-10-07T10:25:00.000Z",
+      "listId": "94f6"
+    }
+  ]
 }

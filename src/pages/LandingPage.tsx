@@ -1,8 +1,37 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import shoppingCartGif from "../assets/shopping cart.gif";
 
 export default function LandingPage() {
   const isAuthed = localStorage.getItem("auth") === "true";
+  const [gifSrc, setGifSrc] = useState(shoppingCartGif);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    // Assuming the GIF loop duration is ~3 seconds, play twice = 6 seconds
+    const timer = setTimeout(() => {
+      // Freeze the GIF by capturing it to canvas
+      if (imgRef.current && canvasRef.current) {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        const img = imgRef.current;
+        
+        canvas.width = img.naturalWidth || img.width;
+        canvas.height = img.naturalHeight || img.height;
+        
+        if (ctx) {
+          ctx.drawImage(img, 0, 0);
+          // Replace the GIF with the canvas image
+          const frozenFrame = canvas.toDataURL('image/png');
+          setGifSrc(frozenFrame);
+        }
+      }
+    }, 6000); // 6 seconds for 2 loops
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="landing">
       <section className="landingHero">
@@ -23,12 +52,14 @@ export default function LandingPage() {
           </div>
         </div>
         <div className="landingHeroArt">
-          {/* Put your gif into src/assets/shoppingcart.gif */}
           <img
+            ref={imgRef}
             className="landingGif"
-            src="/src/assets/shoppingcart.gif"
+            src={gifSrc}
             alt="Shopping cart animation"
+            crossOrigin="anonymous"
           />
+          <canvas ref={canvasRef} style={{ display: 'none' }} />
           <div className="glowBubble b1" />
           <div className="glowBubble b2" />
         </div>
@@ -47,7 +78,7 @@ export default function LandingPage() {
         </div>
         <div className="featCard">
           <div className="featIcon">📱</div>
-          <h3>Made for mobile</h3>
+          <h3>Made for mobile Too</h3>
           <p>Clean, fast UI that shines on your phone while you shop.</p>
         </div>
       </section>

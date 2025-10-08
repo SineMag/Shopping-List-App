@@ -138,7 +138,7 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 required
                 autoComplete="name"
-                aria-invalid={errors.fullName ? "true" : undefined}
+                aria-invalid={errors.fullName ? "true" : "false"}
                 aria-describedby={errors.fullName ? "fullName-error" : undefined}
               />
               {errors.fullName && (
@@ -156,7 +156,7 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 required
                 autoComplete="family-name"
-                aria-invalid={errors.surname ? "true" : undefined}
+                aria-invalid={errors.surname ? "true" : "false"}
                 aria-describedby={errors.surname ? "surname-error" : undefined}
               />
               {errors.surname && (
@@ -174,7 +174,7 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 required
                 autoComplete="tel"
-                aria-invalid={errors.cell ? "true" : undefined}
+                aria-invalid={errors.cell ? "true" : "false"}
                 aria-describedby={errors.cell ? "cell-error" : undefined}
               />
               {errors.cell && (
@@ -192,7 +192,7 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 required
                 autoComplete="email"
-                aria-invalid={errors.email ? "true" : undefined}
+                aria-invalid={errors.email ? "true" : "false"}
                 aria-describedby={errors.email ? "email-error" : undefined}
               />
               {errors.email && (
@@ -211,7 +211,7 @@ export default function RegisterPage() {
                 minLength={6}
                 required
                 autoComplete="new-password"
-                aria-invalid={errors.password ? "true" : undefined}
+                aria-invalid={errors.password ? "true" : "false"}
                 aria-describedby={
                   errors.password ? "password-error" : undefined
                 }
@@ -234,7 +234,7 @@ export default function RegisterPage() {
                 minLength={6}
                 required
                 autoComplete="new-password"
-                aria-invalid={errors.confirmPassword ? "true" : undefined}
+                aria-invalid={errors.confirmPassword ? "true" : "false"}
                 aria-describedby={
                   errors.confirmPassword ? "confirmPassword-error" : undefined
                 }

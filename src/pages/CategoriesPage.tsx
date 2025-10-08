@@ -72,24 +72,26 @@ export default function CategoriesPage() {
   };
 
   return (
-    <div className="categoriesPage" style={{ padding: 16 }}>
-      <h2>Categories</h2>
+    <div className="categoriesPage pageSection">
+      <h2 className="sectionTitle">Categories</h2>
       {loading && <p>Loading...</p>}
       {error && <p className="error">{error}</p>}
 
-      <div className="row" style={{ gap: 6, margin: "12px 0" }}>
-        <input
-          placeholder="New category"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          aria-label="New category name"
-        />
-        <button onClick={createCategory} disabled={!name.trim()}>Add</button>
+      <div className="card padded" style={{ marginBottom: 12 }}>
+        <div className="row" style={{ gap: 8 }}>
+          <input
+            placeholder="New category"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            aria-label="New category name"
+          />
+          <button className="btn primary" onClick={createCategory} disabled={!name.trim()}>Add</button>
+        </div>
       </div>
 
-      <ul className="list">
+      <ul className="list card padded">
         {categories.map((c) => (
-          <li key={c.id} style={{ display: "flex", alignItems: "center", gap: 8, margin: "8px 0" }}>
+          <li key={c.id} className="row" style={{ alignItems: 'center', gap: 8, margin: '8px 0' }}>
             {editingId === c.id ? (
               <>
                 <input
@@ -98,16 +100,16 @@ export default function CategoriesPage() {
                   placeholder="Edit category"
                   aria-label="Edit category name"
                 />
-                <button onClick={saveEdit}>Save</button>
-                <button onClick={() => { setEditingId(null); setEditingName(""); }}>Cancel</button>
+                <button className="btn primary" onClick={saveEdit}>Save</button>
+                <button className="btn" onClick={() => { setEditingId(null); setEditingName(""); }}>Cancel</button>
               </>
             ) : (
               <>
                 <button className="link" onClick={() => openInLists(c.name)} aria-label={`Open ${c.name} in lists`}>
                   {c.name}
                 </button>
-                <button onClick={() => startEdit(c)}>Edit</button>
-                <button onClick={() => removeCategory(c.id)}>Delete</button>
+                <button className="btn" onClick={() => startEdit(c)}>Edit</button>
+                <button className="btn" onClick={() => removeCategory(c.id)}>Delete</button>
               </>
             )}
           </li>

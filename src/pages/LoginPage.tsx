@@ -83,10 +83,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div
-      className="loginPage"
-      style={{ display: "flex", flexDirection: "column" }}
-    >
+    <div className="loginPage">
       <div className="loginArrow">
         <Link to="/home">
           <IoArrowBackCircleSharp size={40} />
@@ -118,7 +115,7 @@ export default function LoginPage() {
               onChange={handleChange}
               required
               autoComplete="email"
-              aria-invalid={errors.email ? "true" : undefined}
+              aria-invalid={errors.email ? "true" : "false"}
               aria-describedby={errors.email ? "login-email-error" : undefined}
             />
             {errors.email && (
@@ -138,7 +135,7 @@ export default function LoginPage() {
               onChange={handleChange}
               required
               autoComplete="current-password"
-              aria-invalid={errors.password ? "true" : undefined}
+              aria-invalid={errors.password ? "true" : "false"}
               aria-describedby={
                 errors.password ? "login-password-error" : undefined
               }

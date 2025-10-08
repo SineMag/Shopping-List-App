@@ -23,7 +23,7 @@ export default function Navbar() {
   return (
     <div className='navbar'>
       <h1 className="brandLogo">
-        <Link to={isAuthed ? "/home" : "/"} aria-label={isAuthed ? "Go to Home" : "Go to Landing"}>SMify</Link>
+        <Link to={isAuthed ? "/home" : "/"} aria-label={isAuthed ? "Go to Home" : "Go to Landing"}>Listify</Link>
       </h1>
       <nav>
         {isAuthed ? (

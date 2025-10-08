@@ -53,10 +53,22 @@ function App() {
                 element={<UnauthOnlyRoute><LoginPage /></UnauthOnlyRoute>}
               />
               <Route path="/privacy" element={<PrivacyPolicy />} />
-              <Route path="/profile" element={<Profile />} />{" "}
-              {/* Add this line */}
-              <Route path="/dashboard" element={<Dashboard />} />{" "}
-              {/* Add this line */}
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/categories"
                 element={
