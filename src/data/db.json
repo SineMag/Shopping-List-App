@@ -182,6 +182,65 @@
       "image": "https://via.placeholder.com/300x200?text=Image",
       "createdAt": "2025-10-08T10:14:21.463Z",
       "listId": "deb6"
+    },
+    {
+      "id": "fddf",
+      "name": "Item",
+      "quantity": 111,
+      "notes": "jfgjf",
+      "category": "Dairy",
+      "image": "https://github.com/SineMag/Shopping-List-App/",
+      "createdAt": "2025-10-08T10:23:21.493Z",
+      "listId": "deb6"
+    },
+    {
+      "id": "88c7",
+      "name": "Item One",
+      "quantity": 10,
+      "notes": "gzdgdrgtre",
+      "category": "Dairy",
+      "image": "image.com",
+      "createdAt": "2025-10-08T10:30:05.605Z"
+    },
+    {
+      "id": "a750",
+      "name": "ytyretea",
+      "quantity": 15,
+      "notes": "fdgdfgd",
+      "category": "Dairy",
+      "image": "rtgdgdfg",
+      "createdAt": "2025-10-08T10:30:21.484Z",
+      "listId": "6ce6"
+    },
+    {
+      "id": "59f5",
+      "name": "jjfjh",
+      "quantity": 19,
+      "notes": "ghfgxhfgc",
+      "category": "Beverages",
+      "image": "jgfxfg",
+      "createdAt": "2025-10-08T10:30:37.052Z",
+      "listId": "6ce6"
+    },
+    {
+      "id": "5d9a",
+      "name": "nhmhgm",
+      "quantity": 1,
+      "notes": "hjcjg",
+      "category": "Meat",
+      "image": "chmgh",
+      "createdAt": "2025-10-08T10:38:40.324Z",
+      "listId": "deb6"
+    },
+    {
+      "id": "f351",
+      "name": "mmhm",
+      "quantity": 1,
+      "notes": "hmvg",
+      "category": "Meat",
+      "image": "https://via.placeholder.com/300x200?text=Image",
+      "createdAt": "2025-10-08T10:39:00.796Z",
+      "listId": "deb6"
     }
   ]
 }

@@ -17,14 +17,15 @@ export default function ListsPage() {
   const listsState = useSelector((s: RootState) => s.lists);
 
   // currentUser from localStorage
-  const currentUser = useMemo(() => {
+  const [currentUser, setCurrentUser] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem("currentUser") || "null");
     } catch {
       return null;
     }
-  }, []);
+  });
   const userId = currentUser?.id;
+  const [profileImage, setProfileImage] = useState<string>(currentUser?.profileImage || '');
 
   // Fetch lists for the current user
   useEffect(() => {
@@ -53,10 +54,13 @@ export default function ListsPage() {
   }, [catParam]);
 
   const filteredItems = useMemo(() => {
+    // If a specific list is selected, show all its items regardless of category
+    if (selectedListIdParam) return items;
+    // Otherwise, filter by selected category
     if (!selectedCatId) return items;
     const name = categories.find((c) => c.id === selectedCatId)?.name;
     return name ? items.filter((i) => i.category === name) : items;
-  }, [items, categories, selectedCatId]);
+  }, [items, categories, selectedCatId, selectedListIdParam]);
 
   // Build a quick map of counts per listId for list cards
   const listCounts = useMemo<Record<string, number>>(() => {
@@ -72,8 +76,9 @@ export default function ListsPage() {
   // Fetch items filtered by listId/category and current params
   useEffect(() => {
     const listId = selectedListIdParam || undefined;
-    // Resolve category name either from selectedCatId or catParam
+    // If viewing a specific list, don't filter by category - show all items in that list
     const selectedCategoryName = (() => {
+      if (selectedListIdParam) return undefined; // No category filter when viewing a list
       if (selectedCatId) return categories.find((c) => c.id === selectedCatId)?.name;
       return catParam || undefined;
     })();
@@ -158,11 +163,8 @@ export default function ListsPage() {
   };
 
   const addItemToList = async (listId: string | number) => {
-    const catName = categories.find((c) => c.id === selectedCatId)?.name || categories[0]?.name;
-    if (!catName) {
-      alert('Please select a category first from the sidebar');
-      return;
-    }
+    // Use selected category or default to first available category
+    const catName = categories.find((c) => c.id === selectedCatId)?.name || categories[0]?.name || 'Uncategorized';
     const name = perListItemForm.name.trim();
     const quantity = Number(perListItemForm.quantity);
     if (!name || isNaN(quantity)) return;
@@ -181,8 +183,10 @@ export default function ListsPage() {
       body: JSON.stringify(payload),
     });
     if (res.ok) {
+      // Select this list to view the newly added items
       setParams((p) => {
         const next = new URLSearchParams(p);
+        next.set('list', String(listId));
         next.set('q', q);
         next.set('sort', sort);
         return next;
@@ -257,6 +261,29 @@ export default function ListsPage() {
   const [editingListName, setEditingListName] = useState("");
   const [shareMsg, setShareMsg] = useState("");
   const [isNavOpen, setIsNavOpen] = useState(false);
+
+  const handleProfileImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const imageData = ev.target?.result as string;
+      setProfileImage(imageData);
+      // Update user in localStorage
+      const updatedUser = { ...currentUser, profileImage: imageData };
+      setCurrentUser(updatedUser);
+      localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+      // Also update in the database
+      if (userId) {
+        fetch(`http://localhost:3001/users/${userId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ profileImage: imageData }),
+        });
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   const selectList = (id: string | number) => {
     setParams((p) => {
@@ -400,7 +427,26 @@ export default function ListsPage() {
             <span className="userNotif">🔔</span>
             <span className="userNotif">✉️</span>
             <span className="userName">{currentUser?.fullName || "User"}</span>
-            <img className="userAvatar" src="https://i.pravatar.cc/40" alt="avatar" />
+            <label className="avatarUpload" htmlFor="profileImageUpload" title="Click to upload profile picture">
+              {profileImage ? (
+                <img className="userAvatar" src={profileImage} alt="avatar" />
+              ) : (
+                <div className="defaultAvatar">
+                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="20" r="20" fill="#e5e7eb"/>
+                    <circle cx="20" cy="16" r="6" fill="#9ca3af"/>
+                    <path d="M8 32c0-6.627 5.373-12 12-12s12 5.373 12 12" fill="#9ca3af"/>
+                  </svg>
+                </div>
+              )}
+              <span className="editPenIcon" title="Upload image">✏️</span>
+              <input
+                id="profileImageUpload"
+                type="file"
+                accept="image/*"
+                onChange={handleProfileImageUpload}
+              />
+            </label>
           </div>
           {selectedListIdParam && (
             <div className="row justifyEnd">
@@ -508,7 +554,20 @@ export default function ListsPage() {
           <button className="floatingAdd" aria-label="Add item" onClick={() => setItemEditingId(null)}>+</button>
         </div>
 
-        <h2 className="sectionTitle">Items</h2>
+        <div className="itemsHeader">
+          <h2 className="sectionTitle">Items {selectedListIdParam && `- ${listsState.items.find(l => String(l.id) === String(selectedListIdParam))?.name || 'List'}`}</h2>
+          {selectedListIdParam && (
+            <button className="secondaryBtn" onClick={() => {
+              setParams((p) => {
+                const next = new URLSearchParams(p);
+                next.delete('list');
+                next.set('q', q);
+                next.set('sort', sort);
+                return next;
+              });
+            }}>View All Items</button>
+          )}
+        </div>
         {status === 'loading' && <p>Loading...</p>}
         {status === 'failed' && <p className="error">{error || 'Failed to load items'}</p>}
         {/* Mobile list (shown on small screens) */}
