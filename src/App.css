@@ -692,6 +692,9 @@ main {
 .listCountChip { background: #e5e7eb; color: #111; border-radius: 999px; padding: 2px 8px; font-size: .8rem; }
 .listCardMeta { margin: 6px 0 8px; }
 .listCardActions { display: flex; align-items: center; gap: 6px; }
+.listCardItemForm { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.listCardItemForm .textInput { width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 8px; font-size: .9rem; }
+.listCardFormActions { display: flex; gap: 6px; }
 
 .productCard {
   background: #f9fafb;

@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { LiaShoppingCartSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchItems } from "../features/ItemsSlice";
 import type { RootState, AppDispatch } from "../../store";
@@ -117,6 +116,10 @@ export default function ListsPage() {
   const [itemEditingId, setItemEditingId] = useState<string | null>(null);
   const [completedIds, setCompletedIds] = useState<Record<string, boolean>>({});
   const [activeTab, setActiveTab] = useState<'list' | 'favorites'>('list');
+  
+  // State for per-list item forms
+  const [addingToListId, setAddingToListId] = useState<string | number | null>(null);
+  const [perListItemForm, setPerListItemForm] = useState<{ name: string; quantity: string; notes: string; image?: string }>({ name: "", quantity: "1", notes: "", image: "" });
 
   const addItem = async () => {
     const catName = categories.find((c) => c.id === selectedCatId)?.name;
@@ -151,6 +154,41 @@ export default function ListsPage() {
         return next;
       });
       setItemForm({ name: '', quantity: '1', notes: '', image: '' });
+    }
+  };
+
+  const addItemToList = async (listId: string | number) => {
+    const catName = categories.find((c) => c.id === selectedCatId)?.name || categories[0]?.name;
+    if (!catName) {
+      alert('Please select a category first from the sidebar');
+      return;
+    }
+    const name = perListItemForm.name.trim();
+    const quantity = Number(perListItemForm.quantity);
+    if (!name || isNaN(quantity)) return;
+    const payload = {
+      name,
+      quantity,
+      notes: perListItemForm.notes.trim(),
+      category: catName,
+      image: perListItemForm.image || 'https://via.placeholder.com/300x200?text=Image',
+      createdAt: new Date().toISOString(),
+      listId: String(listId),
+    };
+    const res = await fetch('http://localhost:3001/items', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (res.ok) {
+      setParams((p) => {
+        const next = new URLSearchParams(p);
+        next.set('q', q);
+        next.set('sort', sort);
+        return next;
+      });
+      setPerListItemForm({ name: '', quantity: '1', notes: '', image: '' });
+      setAddingToListId(null);
     }
   };
 
@@ -391,26 +429,46 @@ export default function ListsPage() {
                   <div className="listCardMeta">
                     <small className="muted">{new Date(l.createdAt).toLocaleDateString()}</small>
                   </div>
-                  <div className="listCardActions">
-                    <button className="primaryBtn" onClick={() => selectList(l.id)}>Open</button>
-                    <button className="secondaryBtn" onClick={() => onStartEditList(l.id, l.name)}>Edit</button>
-                    <button className="secondaryBtn" onClick={() => onDeleteList(l.id)}>Delete</button>
-                  </div>
+                  
+                  {addingToListId === l.id ? (
+                    <div className="listCardItemForm">
+                      <input 
+                        className="textInput" 
+                        placeholder="Item name" 
+                        value={perListItemForm.name} 
+                        onChange={(e) => setPerListItemForm((p) => ({ ...p, name: e.target.value }))} 
+                      />
+                      <input 
+                        className="textInput" 
+                        placeholder="Qty" 
+                        type="number"
+                        value={perListItemForm.quantity} 
+                        onChange={(e) => setPerListItemForm((p) => ({ ...p, quantity: e.target.value }))} 
+                      />
+                      <input 
+                        className="textInput" 
+                        placeholder="Notes" 
+                        value={perListItemForm.notes} 
+                        onChange={(e) => setPerListItemForm((p) => ({ ...p, notes: e.target.value }))} 
+                      />
+                      <div className="listCardFormActions">
+                        <button className="primaryBtn" onClick={() => addItemToList(l.id)}>Add</button>
+                        <button className="secondaryBtn" onClick={() => { setAddingToListId(null); setPerListItemForm({ name: '', quantity: '1', notes: '', image: '' }); }}>Cancel</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="listCardActions">
+                      <button className="primaryBtn" onClick={() => selectList(l.id)}>Open</button>
+                      <button className="secondaryBtn" onClick={() => setAddingToListId(l.id)}>Add Item</button>
+                      <button className="secondaryBtn" onClick={() => onStartEditList(l.id, l.name)}>Edit</button>
+                      <button className="secondaryBtn" onClick={() => onDeleteList(l.id)}>Delete</button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           )}
         </section>
-        <div className="bannerCard">
-          <div className="bannerLeft">
-            <LiaShoppingCartSolid size={62} />
-            <div>
-              <h3>Coffee at home</h3>
-              <p>Discover your favorite flavors.</p>
-            </div>
-          </div>
-          <img className="bannerImg" src="https://via.placeholder.com/420x140?text=Banner" alt="banner" />
-        </div>
 
         {/* Item form (adds to selected category) */}
         <div className="row formRow">
@@ -439,7 +497,7 @@ export default function ListsPage() {
               <button className="secondaryBtn" onClick={() => { setItemEditingId(null); setItemForm({ name: '', quantity: '1', notes: '', image: '' }); }}>Cancel</button>
             </>
           ) : (
-            <button className="primaryBtn" onClick={addItem} disabled={!selectedCatId || !selectedListIdParam}>Add Item</button>
+            <button className="primaryBtn" onClick={addItem} disabled={!selectedCatId}>Add Item</button>
           )}
 
         </div>
