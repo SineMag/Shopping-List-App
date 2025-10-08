@@ -3,29 +3,95 @@ import Footer from "./components/Footer.tsx";
 import Navbar from "./components/Navbar.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
-import HomePage from "./pages/HomePage.tsx"
 import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
+import Dashboard from "./pages/Dashboard.tsx"; // 
+import Profile from "./pages/ProfilePage.tsx"; // <-- Add this import
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import type { ReactElement } from "react";
+import HomePage from "./pages/HomePage.tsx";
+import ListsPage from "./pages/ListsPage.tsx";
+import CategoriesPage from "./pages/CategoriesPage.tsx";
+import NotFoundPage from "./pages/NotFoundPage.tsx";
+import { ToastProvider } from "./components/Toast.tsx";
+import LandingPage from "./pages/LandingPage.tsx";
 
 function App() {
+  const isAuthenticated = () => localStorage.getItem("auth") === "true";
+
+  function ProtectedRoute({ children }: { children: ReactElement }) {
+    return isAuthenticated() ? children : <Navigate to="/login" replace />;
+  }
+
+  function UnauthOnlyRoute({ children }: { children: ReactElement }) {
+    return isAuthenticated() ? <Navigate to="/home" replace /> : children;
+  }
+
   return (
     <>
-      <div className="container">
-        <BrowserRouter>
-          <Navbar />
-          {/* Main section for the app */}
-          <main>
+      <ToastProvider>
+        <div className="container">
+          <BrowserRouter>
+            <Navbar />
+            {/* Main section for the app */}
+            <main>
             <Routes>
-              <Route path="/" element={<Navigate to="/home" replace />} />
-              <Route path="/home" element={<HomePage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/login" element={<LoginPage />} />
+              <Route path="/" element={<LandingPage />} />
+              <Route
+                path="/home"
+                element={
+                  <ProtectedRoute>
+                    <HomePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/register"
+                element={<UnauthOnlyRoute><RegisterPage /></UnauthOnlyRoute>}
+              />
+              <Route
+                path="/login"
+                element={<UnauthOnlyRoute><LoginPage /></UnauthOnlyRoute>}
+              />
               <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/categories"
+                element={
+                  <ProtectedRoute>
+                    <CategoriesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/lists"
+                element={
+                  <ProtectedRoute>
+                    <ListsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
-          </main>
-          <Footer />
-        </BrowserRouter>
-      </div>
+            </main>
+            <Footer />
+          </BrowserRouter>
+        </div>
+      </ToastProvider>
     </>
   );
 }
