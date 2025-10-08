@@ -35,10 +35,6 @@
   ],
   "categories": [
     {
-      "id": "cat1",
-      "name": "Groceries"
-    },
-    {
       "id": "cat2",
       "name": "Dairy"
     },
