@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { LiaShoppingCartSolid } from "react-icons/lia";
 
@@ -12,11 +11,11 @@ export default function Dashboard() {
           Quick links to manage your shopping experience:
         </p>
         <div className="column" style={{ gap: "1rem" }}>
+          <Link className="homeNavButton" to="/home">Home</Link>
+          <Link className="homeNavButton" to="/lists">Shopping Lists</Link>
           <Link className="homeNavButton" to="/profile">Profile</Link>
           <Link className="homeNavButton" to="/categories">Categories</Link>
-          <Link className="homeNavButton" to="/cart">Cart</Link>
-          <Link className="homeNavButton" to="/favourites">Favourites</Link>
-          <Link className="homeNavButton" to="/settings">Settings</Link>
+          <Link className="homeNavButton" to="/privacy">Privacy Policy</Link>
         </div>
       </div>
     </div>

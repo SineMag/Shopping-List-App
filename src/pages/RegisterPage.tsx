@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import bcrypt from "bcryptjs";
-import RegistrationImage from "../assets/image 17.png";
+import ShoppingListHeroImage from "../assets/shoppingListHeroImage.png";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function RegisterPage() {
@@ -113,7 +113,14 @@ export default function RegisterPage() {
   return (
     <div className="registerPage">
       <div className="registrationImage">
-        <img src={RegistrationImage} alt="Registration" />
+        <div className="glassHeroFrame">
+          <img src={ShoppingListHeroImage} alt="Registration" className="glassHeroImage" />
+          <div className="glassHeroOverlay registerGlassOverlay">
+            <span className="homeEyebrow">Create Account</span>
+            <h3>Start with a clear shopping plan.</h3>
+            <p>Sign up once and keep your lists, categories, and profile together.</p>
+          </div>
+        </div>
       </div>
 
       <div className="registrationForm">

@@ -90,8 +90,8 @@ export default function PrivacyPolicy() {
           >
             View DPIA (PDF)
           </a>
-          <Link className="backHomeLink" to="/home">
-            Back to Home
+          <Link className="backHomeLink" to="/">
+            Back to Landing
           </Link>
         </div>
       </section>

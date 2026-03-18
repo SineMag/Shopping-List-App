@@ -85,7 +85,7 @@ export default function LoginPage() {
   return (
     <div className="loginPage">
       <div className="loginArrow">
-        <Link to="/home">
+        <Link to="/">
           <IoArrowBackCircleSharp size={40} />
         </Link>
       </div>

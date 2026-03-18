@@ -14,6 +14,7 @@ import CategoriesPage from "./pages/CategoriesPage.tsx";
 import NotFoundPage from "./pages/NotFoundPage.tsx";
 import { ToastProvider } from "./components/Toast.tsx";
 import LandingPage from "./pages/LandingPage.tsx";
+import FavoritesPage from "./pages/FavoritesPage.tsx";
 
 function App() {
   const isAuthenticated = () => localStorage.getItem("auth") === "true";
@@ -32,15 +33,22 @@ function App() {
         <div className="container">
           <BrowserRouter>
             <Navbar />
-            {/* Main section for the app */}
             <main>
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route
+                  path="/home"
+                  element={
+                    <ProtectedRoute>
+                      <HomePage />
+                    </ProtectedRoute>
+                  }
+                />
               <Route
-                path="/home"
+                path="/dashboard"
                 element={
                   <ProtectedRoute>
-                    <HomePage />
+                    <Dashboard />
                   </ProtectedRoute>
                 }
               />
@@ -62,14 +70,6 @@ function App() {
                 }
               />
               <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
                 path="/categories"
                 element={
                   <ProtectedRoute>
@@ -85,8 +85,28 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/favorites"
+                element={
+                  <ProtectedRoute>
+                    <FavoritesPage />
+                  </ProtectedRoute>
+                }
+              />
+                <Route
+                  path="/cart"
+                  element={<Navigate to="/lists" replace />}
+                />
+                <Route
+                  path="/favourites"
+                  element={<Navigate to="/favorites" replace />}
+                />
+                <Route
+                  path="/settings"
+                  element={<Navigate to="/profile" replace />}
+                />
               <Route path="*" element={<NotFoundPage />} />
-            </Routes>
+              </Routes>
             </main>
             <Footer />
           </BrowserRouter>

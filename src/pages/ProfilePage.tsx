@@ -8,7 +8,6 @@ export default function ProfilePage() {
     try { return JSON.parse(localStorage.getItem("currentUser") || "null"); } catch { return null; }
   }, []);
 
-  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
@@ -26,7 +25,6 @@ export default function ProfilePage() {
   // Load latest user from server
   useEffect(() => {
     if (!currentUser?.email) return;
-    setLoading(true);
     fetch(`http://localhost:3001/users?email=${encodeURIComponent(currentUser.email)}`)
       .then(async (r) => {
         if (!r.ok) throw new Error("Failed to load profile");
@@ -41,8 +39,7 @@ export default function ProfilePage() {
         setEmail(u.email || "");
         setError("");
       })
-      .catch((e: Error) => setError(e.message))
-      .finally(() => setLoading(false));
+      .catch((e: Error) => setError(e.message));
   }, [currentUser?.email]);
 
   const onAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,6 +105,7 @@ export default function ProfilePage() {
           <input type="file" accept="image/*" onChange={onAvatarChange} hidden />
         </label>
         <div className="profile-info">
+          {!serverUser && !error && <p className="muted">Loading profile...</p>}
           {error && <p className="error" role="alert">{error}</p>}
           {success && <p className="successMsg" role="status">{success}</p>}
           <div className="formGroup">

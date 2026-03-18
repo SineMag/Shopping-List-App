@@ -1,8 +1,9 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isAuthed, setIsAuthed] = useState<boolean>(localStorage.getItem('auth') === 'true');
 
   useEffect(() => {
@@ -12,6 +13,10 @@ export default function Navbar() {
     window.addEventListener('storage', onStorage);
     return () => window.removeEventListener('storage', onStorage);
   }, []);
+
+  useEffect(() => {
+    setIsAuthed(localStorage.getItem('auth') === 'true');
+  }, [location.pathname]);
 
   const handleLogout = () => {
     localStorage.removeItem('auth');
@@ -28,8 +33,10 @@ export default function Navbar() {
       <nav>
         {isAuthed ? (
           <>
+            <Link to="/home" aria-label="Go to Home">Home</Link>
             <Link to="/categories" aria-label="Go to Categories">Categories</Link>
             <Link to="/lists" aria-label="Go to Lists">Shopping Lists</Link>
+            <Link to="/profile" aria-label="Go to Profile">Profile</Link>
             <button type="button" onClick={handleLogout} aria-label="Log out" className="logoutBtn">
               Logout
             </button>

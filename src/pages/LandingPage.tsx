@@ -1,65 +1,45 @@
-import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import shoppingCartGif from "../assets/shopping cart.gif";
+import { BsCart4 } from "react-icons/bs";
+import { FaLayerGroup, FaListCheck, FaUsers } from "react-icons/fa6";
 
 export default function LandingPage() {
   const isAuthed = localStorage.getItem("auth") === "true";
-  const [gifSrc, setGifSrc] = useState(shoppingCartGif);
-  const imgRef = useRef<HTMLImageElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    // Assuming the GIF loop duration is ~3 seconds, play twice = 6 seconds
-    const timer = setTimeout(() => {
-      // Freeze the GIF by capturing it to canvas
-      if (imgRef.current && canvasRef.current) {
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        const img = imgRef.current;
-        
-        canvas.width = img.naturalWidth || img.width;
-        canvas.height = img.naturalHeight || img.height;
-        
-        if (ctx) {
-          ctx.drawImage(img, 0, 0);
-          // Replace the GIF with the canvas image
-          const frozenFrame = canvas.toDataURL('image/png');
-          setGifSrc(frozenFrame);
-        }
-      }
-    }, 6000); // 6 seconds for 2 loops
-
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <div className="landing">
       <section className="landingHero">
         <div className="landingHeroContent">
-          <h1 className="landingTitle">Shop smarter. Track everything.</h1>
+          <p className="landingKicker">Shopping List App</p>
+          <h1 className="landingTitle">Clean planning for everyday shopping.</h1>
           <p className="landingSubtitle">
-            Build beautiful shopping lists, stay organized, and share with family.
+            Build lists, organise categories, and move through your grocery run
+            without clutter or dead-end navigation.
           </p>
           <div className="landingCtas">
             {isAuthed ? (
-              <Link to="/home" className="ctaPrimary">Go to App</Link>
+              <Link to="/home" className="ctaPrimary">
+                Open Home
+              </Link>
             ) : (
               <>
-                <Link to="/register" className="ctaPrimary">Get Started</Link>
-                <Link to="/login" className="ctaSecondary">I have an account</Link>
+                <Link to="/register" className="ctaPrimary">
+                  Get Started
+                </Link>
+                <Link to="/login" className="ctaSecondary">
+                  I have an account
+                </Link>
               </>
             )}
           </div>
         </div>
         <div className="landingHeroArt">
-          <img
-            ref={imgRef}
-            className="landingGif"
-            src={gifSrc}
-            alt="Shopping cart animation"
-            crossOrigin="anonymous"
-          />
-          <canvas ref={canvasRef} style={{ display: 'none' }} />
+          <div className="landingCartShell" aria-hidden="true">
+            <BsCart4 size={108} />
+            <div className="landingMiniCard">
+              <span>Ready to buy</span>
+              <strong>Milk, fruit, bread</strong>
+            </div>
+          </div>
           <div className="glowBubble b1" />
           <div className="glowBubble b2" />
         </div>
@@ -67,19 +47,25 @@ export default function LandingPage() {
 
       <section className="landingFeatures">
         <div className="featCard">
-          <div className="featIcon">📝</div>
+          <div className="featIcon">
+            <FaListCheck />
+          </div>
           <h3>Create lists instantly</h3>
-          <p>Make multiple lists, categorize items, and keep them synced.</p>
+          <p>Start a list quickly and keep every item grouped where it belongs.</p>
         </div>
         <div className="featCard">
-          <div className="featIcon">👨‍👩‍👧‍👦</div>
-          <h3>Share with family</h3>
-          <p>Send a share link so everyone stays on the same page.</p>
+          <div className="featIcon">
+            <FaUsers />
+          </div>
+          <h3>Move with your household</h3>
+          <p>Keep everyone aligned on what is needed before you get to the store.</p>
         </div>
         <div className="featCard">
-          <div className="featIcon">📱</div>
-          <h3>Made for mobile Too</h3>
-          <p>Clean, fast UI that shines on your phone while you shop.</p>
+          <div className="featIcon">
+            <FaLayerGroup />
+          </div>
+          <h3>Designed around essentials</h3>
+          <p>Lists, categories, and profile tools stay visible without visual noise.</p>
         </div>
       </section>
     </div>
