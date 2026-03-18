@@ -6,10 +6,13 @@ A full-featured shopping list application built with **React**, **TypeScript**, 
 
 ## 🎯 Project Overview
 
-**Developer:** Sinenhlanhla Magubane   
+### Online Site
+[Shopping List](https://shopping-list-smagubane.onrender.com)
+
+**Developer:** Sinenhlanhla Magubane  
 **Framework:** React 19 with TypeScript  
 **State Management:** Redux Toolkit  
-**Backend:** json-server  
+**Backend:** json-server
 
 This is Task 5 from the React curriculum (Lesson 5), demonstrating modern React development practices including protected routing, Redux state management, and RESTful API integration.
 
@@ -18,12 +21,14 @@ This is Task 5 from the React curriculum (Lesson 5), demonstrating modern React 
 ## ✨ Features
 
 ### User Management
+
 - **Registration**: Users can create accounts with email, password, name, surname, and cell number
 - **Authentication**: Secure login with bcrypt password encryption/decryption
 - **Protected Routes**: Authorization system prevents unauthorized access
 - **Profile Management**: Users can view and update their profile information and credentials
 
 ### Shopping List Management
+
 - **Create**: Add new shopping lists with custom names
 - **Read**: View all your shopping lists and items
 - **Update**: Edit existing lists and items
@@ -31,6 +36,7 @@ This is Task 5 from the React curriculum (Lesson 5), demonstrating modern React 
 - **Multiple Lists**: Manage multiple shopping lists simultaneously
 
 ### Item Management
+
 - **Add Items**: Add items with name, quantity, notes, category, and images
 - **Search**: Real-time search functionality with URL parameter tracking
 - **Sort**: Sort items by name (A-Z, Z-A), date added, or category
@@ -38,6 +44,7 @@ This is Task 5 from the React curriculum (Lesson 5), demonstrating modern React 
 - **Image Upload**: Support for item images (file upload or URL)
 
 ### Advanced Features
+
 - **URL Parameters**: Search and sort keywords visible in URL
 - **URL Sync**: Updating URL parameters automatically updates the view
 - **Category System**: Pre-defined categories for better organization
@@ -63,32 +70,40 @@ This is Task 5 from the React curriculum (Lesson 5), demonstrating modern React 
 ## 📦 Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/SineMag/Shopping-List-App.git
    cd "Shopping List App"
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Create your local env file**
+
    ```bash
    cp .env.example .env
    ```
+
    Set `VITE_API_BASE_URL=http://localhost:3001` for local development.
 
 4. **Start the json-server** (Terminal 1)
+
    ```bash
    npm run server
    ```
+
    This starts the backend API on `http://localhost:3001`
 
 5. **Start the development server** (Terminal 2)
+
    ```bash
    npm run dev
    ```
+
    This starts the React app (usually on `http://localhost:5173`)
 
 6. **Open your browser**
@@ -143,26 +158,31 @@ Shopping List App/
 ## 🎨 Pages
 
 ### 1. **Landing Page** (`/`)
+
 - Welcome page for non-authenticated users
 - Links to login and registration
 
 ### 2. **Login Page** (`/login`)
+
 - Email and password authentication
 - Input validation and error handling
 - Redirect to home after successful login
 
 ### 3. **Registration Page** (`/register`)
+
 - Multi-field registration form
 - Email uniqueness validation
 - Password confirmation
 - Automatic login after registration
 
 ### 4. **Home Page** (`/home`) - Protected
+
 - Personalized welcome message
 - Quick access cards to main features
 - Navigation to lists, categories, and profile
 
 ### 5. **Lists Page** (`/lists`) - Protected
+
 - View all shopping lists
 - Create, edit, and delete lists
 - Add, edit, and delete items
@@ -171,11 +191,13 @@ Shopping List App/
 - Share list functionality
 
 ### 6. **Categories Page** (`/categories`) - Protected
+
 - Manage item categories
 - Add, edit, and delete categories
 - View items by category
 
 ### 7. **Profile Page** (`/profile`) - Protected
+
 - View and edit user information
 - Change avatar
 - Update password
@@ -186,18 +208,21 @@ Shopping List App/
 ## 🔍 Key Features Explained
 
 ### Search & Filter
+
 - **URL-based search**: `?q=milk` searches for "milk"
 - **Real-time updates**: Results update as you type
 - **Category filter**: `?cat=Dairy` shows only Dairy items
 - **Combined filters**: `?q=milk&cat=Dairy&sort=name_asc`
 
 ### Sorting Options
+
 - **Date Descending**: `?sort=date_desc` (default)
 - **Name A-Z**: `?sort=name_asc`
 - **Name Z-A**: `?sort=name_desc`
 - **Category**: `?sort=category`
 
 ### List Sharing
+
 - Click "Share" button to copy list URL
 - URL includes current filters and list ID
 - Anyone with the link can view the list
@@ -207,6 +232,7 @@ Shopping List App/
 ## 📱 Responsive Breakpoints
 
 The app is fully responsive and tested at:
+
 - **320px** - Small mobile devices
 - **480px** - Mobile phones
 - **768px** - Tablets
@@ -218,10 +244,12 @@ The app is fully responsive and tested at:
 ## 🧪 Testing Instructions
 
 ### Test User Account
+
 - **Email**: `em@mail.com`
 - **Password**: `123456` (hashed in db.json)
 
 ### Test Workflow
+
 1. **Register** a new account or login with test credentials
 2. **Create** a new shopping list
 3. **Add items** to your list with different categories
@@ -240,6 +268,7 @@ The app is fully responsive and tested at:
 Base URL: `VITE_API_BASE_URL` (defaults to `http://localhost:3001` locally)
 
 ### Users
+
 - `GET /users` - Get all users
 - `GET /users?email={email}` - Find user by email
 - `POST /users` - Create new user
@@ -247,12 +276,14 @@ Base URL: `VITE_API_BASE_URL` (defaults to `http://localhost:3001` locally)
 - `DELETE /users/:id` - Delete user
 
 ### Shopping Lists
+
 - `GET /shopping-lists?userId={userId}` - Get user's lists
 - `POST /shopping-lists` - Create new list
 - `PUT /shopping-lists/:id` - Update list
 - `DELETE /shopping-lists/:id` - Delete list
 
 ### Items
+
 - `GET /items` - Get all items
 - `GET /items?listId={listId}` - Get items for a list
 - `GET /items?category={category}` - Filter by category
@@ -262,6 +293,7 @@ Base URL: `VITE_API_BASE_URL` (defaults to `http://localhost:3001` locally)
 - `DELETE /items/:id` - Delete item
 
 ### Categories
+
 - `GET /categories` - Get all categories
 - `POST /categories` - Create category
 - `PUT /categories/:id` - Update category
@@ -320,11 +352,13 @@ Without a persistent disk, this setup is suitable for demos, but stored data can
 ## ✅ Evaluation Criteria Met
 
 ### 1. GitHub Interaction ✓
+
 - Frequent commits for every feature
 - Clear commit messages
 - Branch management (development/main)
 
 ### 2. User-Friendliness & Design ✓
+
 - Intuitive navigation
 - Consistent color scheme and typography
 - Responsive layout
@@ -332,6 +366,7 @@ Without a persistent disk, this setup is suitable for demos, but stored data can
 - Hover effects on interactive elements
 
 ### 3. Functionality ✓
+
 - User registration and login
 - Encrypted credentials (bcrypt)
 - Full CRUD for lists and items
@@ -340,24 +375,28 @@ Without a persistent disk, this setup is suitable for demos, but stored data can
 - Category organization
 
 ### 4. Security ✓
+
 - Protected routes implemented
 - Password encryption
 - Authorization checks
 - Secure data handling
 
 ### 5. Page Interactivity ✓
+
 - Cursor changes on hover
 - Color changes for interactive elements
 - Easy navigation between pages
 - Smooth transitions
 
 ### 6. React/TS Features ✓
+
 - Custom reusable components
 - Redux Toolkit for state management
 - Props and state management
 - TypeScript for type safety
 
 ### 7. Code Quality ✓
+
 - camelCase naming convention
 - Self-explanatory variable names
 - Modular code structure
@@ -365,11 +404,13 @@ Without a persistent disk, this setup is suitable for demos, but stored data can
 - Clean and readable code
 
 ### 8. Responsiveness ✓
+
 - Mobile-first design
 - Tested at all required breakpoints
 - Flexible layouts
 
 ### 9. Documentation ✓
+
 - Comprehensive README
 - Setup instructions
 - Feature documentation
@@ -380,11 +421,13 @@ Without a persistent disk, this setup is suitable for demos, but stored data can
 ## 🐛 Known Issues & Future Enhancements
 
 ### Current Limitations
+
 - Image upload stores base64 in database (consider cloud storage for production)
 - No real-time collaboration features
 - No email verification for registration
 
 ### Future Enhancements
+
 - Email verification
 - Password reset functionality
 - Dark mode toggle
@@ -418,4 +461,3 @@ GitHub: https://github.com/SineMag/
 - json-server documentation
 
 ---
-
