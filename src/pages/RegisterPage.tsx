@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import bcrypt from "bcryptjs";
 import ShoppingListHeroImage from "../assets/shoppingListHeroImage.png";
 import { Link, useNavigate } from "react-router-dom";
+import { API_BASE_URL, apiUrl } from "../lib/api";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -62,7 +63,7 @@ export default function RegisterPage() {
     setSubmitting(true);
     try {
       // First, check if email already exists
-      const lookup = await fetch(`http://localhost:3001/users?email=${encodeURIComponent(form.email)}`);
+      const lookup = await fetch(`${apiUrl("/users")}?email=${encodeURIComponent(form.email)}`);
       if (!lookup.ok) throw new Error("Lookup failed");
       const existing = await lookup.json();
       if (Array.isArray(existing) && existing.length > 0) {
@@ -81,7 +82,7 @@ export default function RegisterPage() {
         createdAt: new Date().toISOString(),
       };
 
-      const res = await fetch("http://localhost:3001/users", {
+      const res = await fetch(apiUrl("/users"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -103,7 +104,7 @@ export default function RegisterPage() {
       if (err.message === "EMAIL_EXISTS") {
         setErrors((prev) => ({ ...prev, email: "Email is already registered" }));
       } else {
-        setErrors((prev) => ({ ...prev, submit: "Failed to save. Is json-server running on port 3001?" }));
+        setErrors((prev) => ({ ...prev, submit: `Failed to save. Is the API running at ${API_BASE_URL}?` }));
       }
     } finally {
       setSubmitting(false);

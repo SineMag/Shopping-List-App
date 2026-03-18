@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../lib/api";
 
 export default function CategoriesPage() {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ export default function CategoriesPage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:3001/categories")
+    fetch(apiUrl("/categories"))
       .then((r) => {
         if (!r.ok) throw new Error("Failed to load categories");
         return r.json();

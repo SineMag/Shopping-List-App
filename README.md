@@ -73,19 +73,25 @@ This is Task 5 from the React curriculum (Lesson 5), demonstrating modern React 
    npm install
    ```
 
-3. **Start the json-server** (Terminal 1)
+3. **Create your local env file**
+   ```bash
+   cp .env.example .env
+   ```
+   Set `VITE_API_BASE_URL=http://localhost:3001` for local development.
+
+4. **Start the json-server** (Terminal 1)
    ```bash
    npm run server
    ```
    This starts the backend API on `http://localhost:3001`
 
-4. **Start the development server** (Terminal 2)
+5. **Start the development server** (Terminal 2)
    ```bash
    npm run dev
    ```
    This starts the React app (usually on `http://localhost:5173`)
 
-5. **Open your browser**
+6. **Open your browser**
    Navigate to `http://localhost:5173`
 
 ---
@@ -231,7 +237,7 @@ The app is fully responsive and tested at:
 
 ## 📊 API Endpoints (json-server)
 
-Base URL: `http://localhost:3001`
+Base URL: `VITE_API_BASE_URL` (defaults to `http://localhost:3001` locally)
 
 ### Users
 - `GET /users` - Get all users
@@ -271,7 +277,43 @@ npm run build        # Build for production
 npm run preview      # Preview production build
 npm run lint         # Run ESLint
 npm run server       # Start json-server on port 3001
+npm start            # Start Render-ready json-server
 ```
+
+---
+
+## Render Deployment
+
+### Backend (Render Web Service)
+
+This repo includes:
+
+- `render.yaml` for a Render web service
+- `scripts/start-json-server.mjs` to start `json-server` on Render's `PORT`
+- `src/data/render-db.json` as a clean hosted seed with no users, no shopping lists, and no items
+
+That gives you a clean hosted backend where newly registered users start empty and create their own data.
+
+### Frontend Environment
+
+Set this in your frontend deployment:
+
+```bash
+VITE_API_BASE_URL=https://your-render-service.onrender.com
+```
+
+### Persistence Note
+
+Render documents that web services use an ephemeral filesystem by default, so JSON file changes are lost after redeploys or restarts unless you attach a persistent disk. Persistent disks require a paid Render service. Source: https://render.com/docs/deploy-n8n
+
+If you want user-created lists and items to persist on Render, configure a persistent disk and set:
+
+```bash
+JSON_SERVER_DB_FILE=/var/data/db.json
+JSON_SERVER_SEED_FILE=src/data/render-db.json
+```
+
+Without a persistent disk, this setup is suitable for demos, but stored data can reset.
 
 ---
 

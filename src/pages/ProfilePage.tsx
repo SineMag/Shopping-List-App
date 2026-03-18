@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import bcrypt from "bcryptjs";
+import { apiUrl } from "../lib/api";
 
 const defaultAvatar = "https://via.placeholder.com/120?text=Avatar";
 
@@ -25,7 +26,7 @@ export default function ProfilePage() {
   // Load latest user from server
   useEffect(() => {
     if (!currentUser?.email) return;
-    fetch(`http://localhost:3001/users?email=${encodeURIComponent(currentUser.email)}`)
+    fetch(`${apiUrl("/users")}?email=${encodeURIComponent(currentUser.email)}`)
       .then(async (r) => {
         if (!r.ok) throw new Error("Failed to load profile");
         const users = await r.json();
@@ -74,7 +75,7 @@ export default function ProfilePage() {
         passwordHash,
         createdAt: serverUser.createdAt || new Date().toISOString(),
       };
-      const res = await fetch(`http://localhost:3001/users/${serverUser.id}`, {
+      const res = await fetch(apiUrl(`/users/${serverUser.id}`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

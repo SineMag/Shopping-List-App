@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { apiUrl } from '../lib/api'
 
 export type Item = {
   id: number
@@ -51,7 +52,7 @@ export const fetchItems = createAsyncThunk<Item[], FetchArgs>(
   'items/fetch',
   async (args) => {
     const qs = buildQuery(args)
-    const res = await fetch(`http://localhost:3001/items?${qs}`)
+    const res = await fetch(`${apiUrl("/items")}?${qs}`)
     if (!res.ok) throw new Error('Failed to fetch items')
     const data = (await res.json()) as Item[]
     return data
@@ -78,6 +79,7 @@ const itemsSlice = createSlice({
       .addCase(fetchItems.pending, (state) => {
         state.status = 'loading'
         state.error = undefined
+        state.items = []
       })
       .addCase(fetchItems.fulfilled, (state, action) => {
         state.status = 'succeeded'
@@ -86,6 +88,7 @@ const itemsSlice = createSlice({
       .addCase(fetchItems.rejected, (state, action) => {
         state.status = 'failed'
         state.error = action.error.message
+        state.items = []
       })
   },
 })

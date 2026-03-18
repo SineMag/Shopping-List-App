@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { apiUrl } from "../lib/api";
 
 export type ShoppingList = {
   id: string | number;
@@ -10,7 +11,7 @@ export type ShoppingList = {
 export const fetchLists = createAsyncThunk<ShoppingList[], { userId: string | number }>(
   "lists/fetch",
   async ({ userId }) => {
-    const res = await fetch(`http://localhost:3001/shopping-lists?userId=${encodeURIComponent(String(userId))}&_sort=createdAt&_order=desc`);
+    const res = await fetch(`${apiUrl("/shopping-lists")}?userId=${encodeURIComponent(String(userId))}&_sort=createdAt&_order=desc`);
     if (!res.ok) throw new Error("Failed to fetch lists");
     return (await res.json()) as ShoppingList[];
   }
@@ -24,7 +25,7 @@ export const createList = createAsyncThunk<ShoppingList, { userId: string | numb
       name: name.trim(),
       createdAt: new Date().toISOString(),
     };
-    const res = await fetch(`http://localhost:3001/shopping-lists`, {
+    const res = await fetch(apiUrl("/shopping-lists"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -38,7 +39,7 @@ export const updateList = createAsyncThunk<ShoppingList, { id: string | number; 
   "lists/update",
   async ({ id, name, userId }) => {
     const payload = { id, name: name.trim(), userId, createdAt: new Date().toISOString() };
-    const res = await fetch(`http://localhost:3001/shopping-lists/${id}`, {
+    const res = await fetch(apiUrl(`/shopping-lists/${id}`), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -51,7 +52,7 @@ export const updateList = createAsyncThunk<ShoppingList, { id: string | number; 
 export const deleteList = createAsyncThunk<string | number, { id: string | number }>(
   "lists/delete",
   async ({ id }) => {
-    const res = await fetch(`http://localhost:3001/shopping-lists/${id}`, { method: "DELETE" });
+    const res = await fetch(apiUrl(`/shopping-lists/${id}`), { method: "DELETE" });
     if (!res.ok) throw new Error("Failed to delete list");
     return id;
   }
@@ -77,6 +78,7 @@ const listsSlice = createSlice({
       .addCase(fetchLists.pending, (state) => {
         state.status = "loading";
         state.error = undefined;
+        state.items = [];
       })
       .addCase(fetchLists.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -85,6 +87,7 @@ const listsSlice = createSlice({
       .addCase(fetchLists.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+        state.items = [];
       })
       .addCase(createList.fulfilled, (state, action) => {
         state.items = [action.payload, ...state.items];

@@ -8,6 +8,7 @@ import { useToast } from "../components/Toast";
 import { fetchItems } from "../features/ItemsSlice";
 import type { RootState, AppDispatch } from "../../store";
 import { fetchLists, createList, updateList, deleteList } from "../features/ListsSlice";
+import { apiUrl } from "../lib/api";
 
 export default function ListsPage() {
   const [params, setParams] = useSearchParams();
@@ -44,7 +45,7 @@ export default function ListsPage() {
   const [selectedCatId, setSelectedCatId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:3001/categories")
+    fetch(apiUrl("/categories"))
       .then((r) => r.json())
       .then((data: { id: string; name: string }[]) => {
         setCategories(data);
@@ -74,14 +75,32 @@ export default function ListsPage() {
     return map;
   }, [items]);
 
+  const validSelectedListId = useMemo(() => {
+    if (!selectedListIdParam) return "";
+    return listsState.items.some((list) => String(list.id) === String(selectedListIdParam))
+      ? selectedListIdParam
+      : "";
+  }, [selectedListIdParam, listsState.items]);
+
   useEffect(() => {
-    const listId = selectedListIdParam || undefined;
+    const listId = validSelectedListId || undefined;
     const selectedCategoryName = (() => {
       if (selectedCatId) return categories.find((c) => c.id === selectedCatId)?.name;
       return catParam || undefined;
     })();
     dispatch(fetchItems({ q, sort, listId, category: selectedCategoryName }));
-  }, [dispatch, q, sort, selectedListIdParam, selectedCatId, categories, catParam]);
+  }, [dispatch, q, sort, validSelectedListId, selectedCatId, categories, catParam]);
+
+  useEffect(() => {
+    if (!selectedListIdParam || validSelectedListId || listsState.status !== "succeeded") return;
+    setParams((p) => {
+      const next = new URLSearchParams(p);
+      next.delete("list");
+      next.set("q", q);
+      next.set("sort", sort);
+      return next;
+    });
+  }, [selectedListIdParam, validSelectedListId, listsState.status, q, sort, setParams]);
 
   const [itemForm, setItemForm] = useState<{ name: string; quantity: string; notes: string; image?: string }>({
     name: "",
@@ -149,7 +168,7 @@ export default function ListsPage() {
       fetchItems({
         q,
         sort,
-        listId: typeof nextListId !== "undefined" ? nextListId : selectedListIdParam || undefined,
+        listId: typeof nextListId !== "undefined" ? nextListId : validSelectedListId || undefined,
         category: selectedCategoryName,
       })
     );
@@ -184,7 +203,7 @@ export default function ListsPage() {
       listId: selectedListIdParam || undefined,
     };
 
-    const res = await fetch("http://localhost:3001/items", {
+    const res = await fetch(apiUrl("/items"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -222,7 +241,7 @@ export default function ListsPage() {
       return;
     }
 
-    const res = await fetch(`http://localhost:3001/items/${itemEditingId}`, {
+    const res = await fetch(apiUrl(`/items/${itemEditingId}`), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -244,6 +263,23 @@ export default function ListsPage() {
       show("Item updated", "success");
     } else {
       show("Failed to update item", "error");
+    }
+  };
+
+  const deleteItem = async (id: string | number) => {
+    const res = await fetch(apiUrl(`/items/${id}`), {
+      method: "DELETE",
+    });
+
+    if (res.ok) {
+      if (String(itemEditingId) === String(id)) {
+        setItemEditingId(null);
+        setItemForm({ name: "", quantity: "", notes: "", image: "" });
+      }
+      refreshVisibleItems();
+      show("Item deleted", "success");
+    } else {
+      show("Failed to delete item", "error");
     }
   };
 
@@ -523,6 +559,14 @@ export default function ListsPage() {
                   {Number(p.quantity ?? 1) > 1 && <span className="qtyBadge">{p.quantity}</span>}
                 </div>
                 {p.notes && <p className="muted">{p.notes}</p>}
+                <div className="itemCardDesktopActions">
+                  <button className="secondaryBtn compactBtn" onClick={() => startEditItem(p as any)}>
+                    Edit
+                  </button>
+                  <button className="secondaryBtn compactBtn" onClick={() => deleteItem(p.id)}>
+                    Delete
+                  </button>
+                </div>
               </article>
             ))}
           </div>
@@ -534,6 +578,14 @@ export default function ListsPage() {
                 <button className={`statusDot ${completedIds[String(p.id)] ? "done" : ""}`} onClick={() => toggleCompleted(p.id)} aria-label={completedIds[String(p.id)] ? "Mark as not done" : "Mark as done"} />
                 <button className={`itemName ${completedIds[String(p.id)] ? "line" : ""}`} onClick={() => startEditItem(p as any)}>{p.name}</button>
                 {Number(p.quantity ?? 1) > 1 && <span className="qtyBadge">{p.quantity}</span>}
+                <div className="mobileItemActions">
+                  <button className="secondaryBtn compactBtn" onClick={() => startEditItem(p as any)}>
+                    Edit
+                  </button>
+                  <button className="secondaryBtn compactBtn" onClick={() => deleteItem(p.id)}>
+                    Delete
+                  </button>
+                </div>
               </li>
             ))}
           </ul>

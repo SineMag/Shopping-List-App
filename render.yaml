@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: shopping-list-api
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: JSON_SERVER_SEED_FILE
+        value: src/data/render-db.json

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import bcrypt from "bcryptjs";
 import { Link, useNavigate } from "react-router-dom";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
+import { API_BASE_URL, apiUrl } from "../lib/api";
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -50,7 +51,7 @@ export default function LoginPage() {
     try {
       // Lookup user by email
       const res = await fetch(
-        `http://localhost:3001/users?email=${encodeURIComponent(form.email)}`
+        `${apiUrl("/users")}?email=${encodeURIComponent(form.email)}`
       );
       if (!res.ok) throw new Error("Lookup failed");
       const users = await res.json();
@@ -75,7 +76,7 @@ export default function LoginPage() {
       if (err.message === "INVALID_CREDENTIALS") {
         setErrors((prev) => ({ ...prev, submit: "Invalid email or password" }));
       } else {
-        setErrors((prev) => ({ ...prev, submit: "Login failed. Is json-server running on port 3001?" }));
+        setErrors((prev) => ({ ...prev, submit: `Login failed. Is the API running at ${API_BASE_URL}?` }));
       }
     } finally {
       setSubmitting(false);

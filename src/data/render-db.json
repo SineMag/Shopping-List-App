@@ -1,0 +1,43 @@
+{
+  "users": [],
+  "categories": [
+    {
+      "id": "cat2",
+      "name": "Dairy"
+    },
+    {
+      "id": "cat3",
+      "name": "Produce"
+    },
+    {
+      "id": "cat4",
+      "name": "Meat"
+    },
+    {
+      "id": "cat5",
+      "name": "Bakery"
+    },
+    {
+      "id": "cat6",
+      "name": "Beverages"
+    },
+    {
+      "id": "cat7",
+      "name": "Household"
+    },
+    {
+      "id": "cat8",
+      "name": "Personal Care"
+    },
+    {
+      "id": "cat9",
+      "name": "Frozen Foods"
+    },
+    {
+      "id": "cat10",
+      "name": "Snacks"
+    }
+  ],
+  "items": [],
+  "shopping-lists": []
+}
